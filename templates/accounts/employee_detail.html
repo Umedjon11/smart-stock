@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="employee-card">
+
+    <a href="{% url 'employee_list' %}">← Назад к списку</a>
+
+    <div class="employee-header">
+
+        {% if employee.photo %}
+        <img src="{{ employee.photo.url }}" alt="{{ employee.user.username }}">
+        {% endif %}
+
+        <div>
+            <h1>{{ employee.user.username }}</h1>
+            <span>{{ employee.get_position_display }}</span>
+        </div>
+
+    </div>
+
+    <hr>
+
+    <h2>Информация о сотруднике</h2>
+
+    <p>Email: {{ employee.user.email|default:"Не указан" }}</p>
+    <p>Телефон: {{ employee.phone|default:"Не указан" }}</p>
+    <p>Должность: {{ employee.get_position_display }}</p>
+    <p>Адрес: {{ employee.address|default:"Не указан" }}</p>
+
+    <p>
+        Дата рождения:
+        {{ employee.birth_date|date:"d.m.Y"|default:"Не указана" }}
+    </p>
+
+    <p>
+        Дата регистрации:
+        {{ employee.created_at|date:"d.m.Y" }}
+    </p>
+    
+    {% if user.is_superuser or user.employee_profile.position == 'manager' %}
+    <div class="employee-actions">
+        <a href="{% url 'update_employee' employee.pk %}" class="employee-edit-btn">
+            ✏️ Редактировать
+        </a>
+
+        {% if user.is_superuser %}
+        <form method="post" action="{% url 'delete_employee' employee.pk %}"
+            onsubmit="return confirm('Вы уверены, что хотите удалить сотрудника?');">
+            {% csrf_token %}
+            <button type="submit" class="employee-delete-btn">
+                🗑 Удалить
+            </button>
+        </form>
+        {% endif %}
+    </div>
+    {% endif %}
+    
+
+</div>
+{% endblock %}

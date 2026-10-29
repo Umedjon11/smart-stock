@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="order-detail-page">
+
+    <h2>Заказ №{{ order.pk }}</h2>
+
+    <div class="order-info">
+        <p><strong>Поставщик:</strong> {{ order.supplier.name }}</p>
+        <p><strong>Телефон:</strong> {{ order.supplier.phone }}</p>
+        <p><strong>Дата:</strong> {{ order.order_date|date:"d.m.Y" }}</p>
+        <p><strong>Создал:</strong> {{ order.created_by.username }}</p>
+        <p><strong>Статус:</strong> {{ order.get_status_display }}</p>
+        <p><strong>Примечание:</strong> {{ order.notes|default:"Нет" }}</p>
+    </div>
+
+    <h3>Товары заказа</h3>
+
+    <div class="order-items">
+        {% for item in order.items.all %}
+        <div class="order-item">
+            <h4>{{ item.product_name }}</h4>
+            <p>Количество: {{ item.quantity }}</p>
+            <p>Цена за единицу: {{ item.unit_price }} сомони</p>
+            <p>Сумма: {{ item.total_price }} сомони</p>
+        </div>
+        {% empty %}
+        <p>Товары пока не добавлены.</p>
+        {% endfor %}
+    </div>
+
+    <a href="{% url 'order_list' %}" class="btn-back">
+        ← Назад к заказам
+    </a>
+    <a href="{% url 'update_order_status' order.pk %}">
+        Изменить статус
+    </a>
+
+</div>
+{% endblock %}

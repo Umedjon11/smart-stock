@@ -1,0 +1,21 @@
+ {% extends 'base.html' %}
+
+{% block content %}
+<div class="order-form-page">
+    <div class="order-form-card">
+        <h2>Создать заказ поставщику</h2>
+        <p>Выберите поставщика и добавьте примечание к заказу.</p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <div class="order-form-actions">
+                <button type="submit">Создать заказ</button>
+                <a href="{% url 'order_list' %}">Назад</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
