@@ -42,6 +42,6 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         'is_active'
     ]
 
-    template_name = 'nozim/product_form.html'
+    template_name='nozim/product_form.html'
     success_url = reverse_lazy('products:product_list')
     login_url = '/admin/login/'
