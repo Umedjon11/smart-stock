@@ -4,19 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Каталог товаров — SmartStock</title>
-    <!-- Подключаем Bootstrap 5 для стильного дизайна -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
 
-    <!-- Навигационная панель -->
+    <!-- Навигационная панель с полными путями -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
         <div class="container">
             <a class="navbar-brand fw-bold" href="{% url 'products:product_list' %}">📦 SmartStock</a>
-            <div class="d-flex align-items-center gap-3">
-                <span class="text-white-50 d-none d-sm-inline">Складской учет</span>
-                <!-- Кнопка перехода на страницу создания товара -->
-                <a href="{% url 'products:product_create' %}" class="btn btn-outline-light btn-sm rounded-pill px-3">
+            
+            <div class="navbar-nav ms-auto flex-row gap-3 align-items-center">
+                <!-- Ссылка на каталог -->
+                <a class="nav-link text-white active fw-semibold" href="{% url 'products:product_list' %}">Товары</a>
+                <!-- Ссылка на категории (согласно ТЗ) -->
+                <a class="nav-link text-white-50" href="{% url 'products:category_list' %}">Категории</a>
+                <!-- Ссылка на склады (согласно ТЗ) -->
+                <a class="nav-link text-white-50" href="">Склады</a>
+                
+                <!-- Кнопка добавления товара -->
+                <a href="{% url 'products:product_create' %}" class="btn btn-outline-light btn-sm rounded-pill px-3 ms-2">
                     + Добавить товар
                 </a>
             </div>
@@ -26,8 +32,11 @@
     <!-- Основной контент -->
     <div class="container my-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 fw-bold text-dark">Каталог товаров</h1>
-            <span class="badge bg-primary fs-6">Активных товаров: {{ products|length }}</span>
+            <div>
+                <h1 class="h3 fw-bold text-dark">Каталог товаров</h1>
+                <p class="text-muted small mb-0">Управление товарными позициями и складскими остатками</p>
+            </div>
+            <span class="badge bg-primary fs-6 px-3 py-2">Активных товаров: {{ products|length }}</span>
         </div>
 
         <!-- Сетка карточек товаров -->
@@ -40,7 +49,6 @@
                         {% if product.image %}
                             <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
                         {% else %}
-                            <!-- Заглушка, если фото не загружено -->
                             <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
                                 <span class="small text-uppercase tracking-wider">Нет фото</span>
                             </div>
@@ -59,7 +67,6 @@
                             
                             <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
                                 <span class="text-secondary small">Ед: <strong>{{ product.unit.short_name|default:"шт" }}</strong></span>
-                                <!-- Исправленный тег url с учетом namespace 'products:' -->
                                 <a href="{% url 'products:product_detail' product.pk %}" class="btn btn-outline-dark btn-sm rounded-pill px-3">Открыть</a>
                             </div>
                         </div>
@@ -69,7 +76,7 @@
                 <div class="col-12 text-center py-5">
                     <div class="alert alert-warning py-4" role="alert">
                         <h4 class="alert-heading">Товары не найдены!</h4>
-                        <p class="mb-0">В базе данных пока нет активных товаров. Добавьте их через кнопку выше или админ-панель.</p>
+                        <p class="mb-0">В базе данных пока нет активных товаров. Нажмите кнопку «+ Добавить товар» выше.</p>
                     </div>
                 </div>
             {% endfor %}
