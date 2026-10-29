@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Поставщики</h2>
+
+<a href="{% url 'create_supplier' %}">+ Добавить поставщика</a>
+
+{% for supplier in suppliers %}
+    <a href="{% url 'supplier_detail' supplier.pk %}" class="supplier-card">
+
+        <h3>{{ supplier.name }}</h3>
+
+        <p>Контактное лицо: {{ supplier.contact_person|default:"Не указано" }}</p>
+        <p>Телефон: {{ supplier.phone }}</p>
+        <p>Email: {{ supplier.email|default:"Не указан" }}</p>
+        <p>Адрес: {{ supplier.address|default:"Не указан" }}</p>
+
+    </a>
+{% empty %}
+    <p>Поставщиков пока нет.</p>
+{% endfor %}
+
+{% endblock %}

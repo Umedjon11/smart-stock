@@ -1,0 +1,40 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="supplier-form-page">
+    <div class="supplier-form-card">
+
+        <div class="supplier-form-header">
+            <h2>✏️ Редактировать поставщика</h2>
+            <p>Измените информацию о поставщике</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+
+                    {{ field }}
+
+                    {% if field.errors %}
+                        <div class="field-error">
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="supplier-form-actions">
+                <button type="submit">Сохранить изменения</button>
+                <a href="{% url 'supplier_list' %}">Назад</a>
+            </div>
+        </form>
+
+    </div>
+</div>
+{% endblock %}
