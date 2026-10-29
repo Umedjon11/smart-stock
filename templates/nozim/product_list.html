@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог товаров — SmartStock</title>
+    <!-- Подключаем Bootstrap 5 для стильного дизайна -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <!-- Навигационная панель -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{% url 'products:product_list' %}">📦 SmartStock</a>
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-white-50 d-none d-sm-inline">Складской учет</span>
+                <!-- Кнопка перехода на страницу создания товара -->
+                <a href="{% url 'products:product_create' %}" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                    + Добавить товар
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Основной контент -->
+    <div class="container my-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 fw-bold text-dark">Каталог товаров</h1>
+            <span class="badge bg-primary fs-6">Активных товаров: {{ products|length }}</span>
+        </div>
+
+        <!-- Сетка карточек товаров -->
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for product in products %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
+                        
+                        <!-- Блок с фото товара -->
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <!-- Заглушка, если фото не загружено -->
+                            <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <span class="small text-uppercase tracking-wider">Нет фото</span>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-info text-dark">{{ product.category.name|default:"Без категории" }}</span>
+                                <small class="text-muted">SKU: {{ product.sku }}</small>
+                            </div>
+                            
+                            <h5 class="card-title fw-bold text-dark">{{ product.name }}</h5>
+                            <p class="card-text text-muted small flex-grow-1">
+                                {{ product.description|default:"Описание отсутствует"|truncatechars:90 }}
+                            </p>
+                            
+                            <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                                <span class="text-secondary small">Ед: <strong>{{ product.unit.short_name|default:"шт" }}</strong></span>
+                                <!-- Исправленный тег url с учетом namespace 'products:' -->
+                                <a href="{% url 'products:product_detail' product.pk %}" class="btn btn-outline-dark btn-sm rounded-pill px-3">Открыть</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center py-5">
+                    <div class="alert alert-warning py-4" role="alert">
+                        <h4 class="alert-heading">Товары не найдены!</h4>
+                        <p class="mb-0">В базе данных пока нет активных товаров. Добавьте их через кнопку выше или админ-панель.</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+</html>

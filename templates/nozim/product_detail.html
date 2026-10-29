@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }} — SmartStock</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <!-- Навигация -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <!-- Исправлен URL с учетом namespace 'products:' -->
+            <a class="navbar-brand fw-bold" href="{% url 'products:product_list' %}">📦 SmartStock</a>
+            <span class="text-white-50">Карточка товара</span>
+        </div>
+    </nav>
+
+    <!-- Основной контент карточки -->
+    <div class="container my-5">
+        <div class="mb-3">
+            <!-- Исправлен URL с учетом namespace 'products:' -->
+            <a href="{% url 'products:product_list' %}" class="btn btn-outline-secondary btn-sm rounded-pill">
+                ← Назад к каталогу
+            </a>
+        </div>
+
+        <div class="card shadow-sm border-0 rounded-4 overflow-hidden bg-white">
+            <div class="row g-0">
+                <!-- Фото товара -->
+                <div class="col-md-5 bg-light d-flex align-items-center justify-content-center">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" class="img-fluid w-100 h-100" style="object-fit: cover; min-height: 350px;" alt="{{ product.name }}">
+                    {% else %}
+                        <div class="text-secondary py-5 text-center w-100 h-100 d-flex align-items-center justify-content-center" style="min-height: 350px;">
+                            <span class="fs-5 text-uppercase tracking-wider">Нет фотографии</span>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Информация о товаре -->
+                <div class="col-md-7">
+                    <div class="card-body p-4 p-lg-5 d-flex flex-column h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="badge bg-primary fs-6">{{ product.category.name|default:"Без категории" }}</span>
+                            <span class="text-muted small">SKU: <strong>{{ product.sku }}</strong></span>
+                        </div>
+
+                        <h1 class="h2 fw-bold text-dark mb-3">{{ product.name }}</h1>
+
+                        <p class="text-muted mb-4">
+                            {{ product.description|default:"Описание для этого товара пока не добавлено." }}
+                        </p>
+
+                        <div class="row g-3 mb-4 border-top border-bottom py-3">
+                            <div class="col-6">
+                                <span class="text-muted d-small">Единица измерения:</span>
+                                <h5 class="fw-bold mb-0">{{ product.unit.name|default:"Штука" }} ({{ product.unit.short_name|default:"шт" }})</h5>
+                            </div>
+                            <div class="col-6">
+                                <span class="text-muted d-small">Мин. остаток:</span>
+                                <h5 class="fw-bold text-danger mb-0">{{ product.min_stock_level }} {{ product.unit.short_name|default:"шт" }}</h5>
+                            </div>
+                        </div>
+
+                        <div class="mt-auto d-flex gap-2">
+                            <!-- Ссылка для редактирования в админке -->
+                            <a href="{% url 'admin:products_product_change' product.pk %}" target="_blank" class="btn btn-dark rounded-pill px-4">
+                                Редактировать в админке
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
