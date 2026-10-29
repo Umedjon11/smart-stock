@@ -1,0 +1,62 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="supplier-detail-page">
+    <div class="supplier-detail-card">
+
+        <div class="supplier-detail-header">
+            <div class="supplier-icon">🏢</div>
+            <div>
+                <h2>{{ supplier.name }}</h2>
+                <p>Информация о поставщике</p>
+            </div>
+        </div>
+
+        <div class="supplier-detail-info">
+            <div class="detail-row">
+                <span>Контактное лицо</span>
+                <strong>{{ supplier.contact_person|default:"Не указано" }}</strong>
+            </div>
+
+            <div class="detail-row">
+                <span>Телефон</span>
+                <strong>{{ supplier.phone }}</strong>
+            </div>
+
+            <div class="detail-row">
+                <span>Email</span>
+                <strong>{{ supplier.email|default:"Не указан" }}</strong>
+            </div>
+
+            <div class="detail-row">
+                <span>Адрес</span>
+                <strong>{{ supplier.address|default:"Не указан" }}</strong>
+            </div>
+
+            <div class="detail-row">
+                <span>Дата добавления</span>
+                <strong>{{ supplier.created_at|date:"d.m.Y H:i" }}</strong>
+            </div>
+        </div>
+
+        <div class="supplier-detail-actions">
+            <a href="{% url 'supplier_list' %}" class="btn-back">
+                Назад к поставщикам
+            </a>
+
+            {% if user.is_superuser or user.employee_profile.position == 'manager' %}
+                <a href="{% url 'update_supplier' supplier.pk %}" class="btn-edit">
+                    Редактировать
+                </a>
+
+                <form action="{% url 'delete_supplier' supplier.pk %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Удалить</button>
+                </form>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

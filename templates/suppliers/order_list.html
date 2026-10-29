@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="orders-page">
+    <div class="orders-header">
+        <h2>Заказы поставщикам</h2>
+
+        <a href="{% url 'create_order' %}" class="btn-create">
+            + Создать заказ
+        </a>
+    </div>
+
+    <div class="orders-list">
+        {% for order in orders %}
+            <a href="{% url 'order_detail' order.pk %}" class="order-card">
+
+                <div class="order-card-header">
+                    <h3>Заказ №{{ order.pk }}</h3>
+
+                    <span class="order-status status-{{ order.status }}">
+                        {{ order.get_status_display }}
+                    </span>
+                </div>
+
+                <p>
+                    <strong>Поставщик:</strong>
+                    {{ order.supplier.name }}
+                </p>
+
+                <p>
+                    <strong>Дата:</strong>
+                    {{ order.order_date|date:"d.m.Y" }}
+                </p>
+
+                <p>
+                    <strong>Создал:</strong>
+                    {{ order.created_by.username }}
+                </p>
+
+            </a>
+        {% empty %}
+            <p class="empty-orders">Заказов пока нет.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

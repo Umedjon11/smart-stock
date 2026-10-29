@@ -1,0 +1,76 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="profile-page">
+
+    <div class="profile-card">
+
+        <div class="profile-top">
+            {% if profile.photo %}
+                <img class="profile-photo"
+                     src="{{ profile.photo.url }}"
+                     alt="{{ profile.user.username }}">
+            {% else %}
+                <div class="profile-no-photo">
+                    {{ profile.user.username|first|upper }}
+                </div>
+            {% endif %}
+
+            <h1>{{ profile.user.username }}</h1>
+
+            <span class="profile-position">
+                {{ profile.get_position_display }}
+            </span>
+        </div>
+
+        <div class="profile-divider"></div>
+
+        <h2>Личная информация</h2>
+
+        <div class="profile-details">
+
+            <div class="profile-detail">
+                <span>👤 Username</span>
+                <strong>{{ profile.user.username }}</strong>
+            </div>
+
+            <div class="profile-detail">
+                <span>✉ Email</span>
+                <strong>{{ profile.user.email|default:"Не указан" }}</strong>
+            </div>
+
+            <div class="profile-detail">
+                <span>☎ Телефон</span>
+                <strong>{{ profile.phone|default:"Не указан" }}</strong>
+            </div>
+
+            <div class="profile-detail">
+                <span>💼 Должность</span>
+                <strong>{{ profile.get_position_display }}</strong>
+            </div>
+
+            <div class="profile-detail">
+                <span>📍 Адрес</span>
+                <strong>{{ profile.address|default:"Не указан" }}</strong>
+            </div>
+
+            <div class="profile-detail">
+                <span>🎂 Дата рождения</span>
+                <strong>{{ profile.birth_date|date:"d.m.Y"|default:"Не указана" }}</strong>
+            </div>
+
+            <div class="profile-detail">
+                <span>📅 Дата регистрации</span>
+                <strong>{{ profile.created_at|date:"d.m.Y" }}</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,38 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="supplier-form-page">
+    <div class="supplier-form-card">
+        <div class="supplier-form-header">
+            <h2>＋ Создать поставщика</h2>
+            <p>Добавьте нового поставщика в Smart Stock</p>
+        </div>
+
+        <form action="" method="post">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+
+                    {{ field }}
+
+                    {% if field.errors %}
+                        <div class="field-error">
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="supplier-form-actions">
+                <button type="submit">Создать поставщика</button>
+                <a href="{% url 'supplier_list' %}">Назад</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
