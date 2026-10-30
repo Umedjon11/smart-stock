@@ -98,7 +98,7 @@ class WriteOffListView(LoginRequiredMixin, ListView):
 
 class WriteOffDetailView(LoginRequiredMixin, DetailView):
     login_url = 'login'
-    model = StockReceipt
+    model = StockWriteOff
     template_name = 'inventory/writeoff_detail.html'
     context_object_name = 'writeoff'
 
