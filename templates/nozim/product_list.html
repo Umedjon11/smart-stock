@@ -1,80 +1,592 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Каталог товаров — SmartStock</title>
-    <!-- Подключаем Bootstrap 5 для стильного дизайна -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
 
-    <!-- Навигационная панель -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'products:product_list' %}">📦 SmartStock</a>
-            <div class="d-flex align-items-center gap-3">
-                <span class="text-white-50 d-none d-sm-inline">Складской учет</span>
-                <!-- Кнопка перехода на страницу создания товара -->
-                <a href="{% url 'products:product_create' %}" class="btn btn-outline-light btn-sm rounded-pill px-3">
-                    + Добавить товар
+    <!-- Шрифты и иконки Material Symbols -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-error-container": "#93000a",
+                        "secondary-fixed": "#d8e2ff",
+                        "primary": "#004ac6",
+                        "surface-bright": "#f8f9ff",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#00174b",
+                        "outline-variant": "#c3c6d7",
+                        "inverse-on-surface": "#eaf1ff",
+                        "tertiary": "#005a82",
+                        "on-error": "#ffffff",
+                        "surface-container-high": "#dce9ff",
+                        "surface-dim": "#cbdbf5",
+                        "surface": "#f8f9ff",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#213145",
+                        "surface-tint": "#0053db",
+                        "secondary-container": "#2170e4",
+                        "inverse-primary": "#b4c5ff",
+                        "on-primary-container": "#eeefff",
+                        "tertiary-fixed": "#c9e6ff",
+                        "tertiary-fixed-dim": "#89ceff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-secondary-fixed-variant": "#004395",
+                        "on-secondary": "#ffffff",
+                        "background": "#f8f9ff",
+                        "surface-container-low": "#eff4ff",
+                        "error": "#ba1a1a",
+                        "outline": "#737686",
+                        "primary-container": "#2563eb",
+                        "on-tertiary-fixed-variant": "#004c6e",
+                        "on-surface": "#0b1c30",
+                        "surface-variant": "#d3e4fe",
+                        "on-secondary-fixed": "#001a42",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "on-tertiary-container": "#e4f2ff",
+                        "secondary": "#0058be",
+                        "on-tertiary-fixed": "#001e2f",
+                        "surface-container-highest": "#d3e4fe",
+                        "tertiary-container": "#0074a6",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#0b1c30",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-surface-variant": "#434655",
+                        "on-secondary-container": "#fefcff",
+                        "surface-container": "#e5eeff",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "space-xs": "0.25rem",
+                        "margin-sm": "1rem",
+                        "space-lg": "1.5rem",
+                        "space-xl": "2.5rem",
+                        "space-sm": "0.5rem",
+                        "margin": "2rem",
+                        "gutter": "1.5rem",
+                        "space-md": "1rem",
+                        "gutter-sm": "1rem"
+                    },
+                    fontFamily: {
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "code-num": ["Inter"],
+                        "headline-xl": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    fontSize: {
+                        "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "code-num": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+                        "headline-xl": ["36px", { "lineHeight": "44px", "fontWeight": "600" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        };
+    </script>
+
+    <style>
+        @layer base {
+            html, body { margin: 0; padding: 0; }
+            body { overscroll-behavior: none; }
+            main > :first-child { margin-top: 0 !important; }
+            main > :last-child { margin-bottom: 0 !important; }
+        }
+        ::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+
+<body class="bg-surface font-body-md text-on-surface antialiased">
+
+    <!-- Боковая панель навигации (Sidebar) -->
+    <aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.03)] z-50 flex flex-col justify-between p-space-lg">
+        <div class="flex flex-col gap-space-lg">
+            <!-- Логотип -->
+            <a href="{% url 'products:product_list' %}" class="flex items-center gap-space-sm px-space-xs">
+                <div class="w-9 h-9 rounded-lg bg-primary-container text-on-primary flex items-center justify-center shadow-sm">
+                    <span class="material-symbols-outlined text-[20px]">inventory_2</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">SmartStock</span>
+                    <span class="font-label-sm text-label-sm text-tertiary font-medium">Складской учет</span>
+                </div>
+            </a>
+
+            <!-- Навигационное меню с вашими текущими путями -->
+            <nav class="flex flex-col gap-space-xs">
+                <a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-colors bg-primary-container text-on-primary-container font-headline-sm rounded-lg shadow-sm" href="{% url 'products:product_list' %}">
+                    <span class="material-symbols-outlined text-[20px]">package_2</span>
+                    <span class="font-label-lg text-label-lg">Товары и остатки</span>
+                </a>
+
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="{% url 'products:category_list' %}">
+                    <span class="material-symbols-outlined text-[20px]">category</span>
+                    <span class="font-label-lg text-label-lg">Категории</span>
+                </a>
+
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="{% url 'products:product_create' %}">
+                    <span class="material-symbols-outlined text-[20px]">add_box</span>
+                    <span class="font-label-lg text-label-lg">Добавить товар</span>
+                </a>
+              
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="{% url 'warehouses:warehouse_list' %}">
+                    <span class="material-symbols-outlined text-[20px]">add_box</span>
+                    <span class="font-label-lg text-label-lg">Склады</span>
+                </a>
+                
+               
+
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="{% url 'products:category_create' %}">
+                    <span class="material-symbols-outlined text-[20px]">create_new_folder</span>
+                    <span class="font-label-lg text-label-lg">Новая категория</span>
+                </a>
+
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="/admin/">
+                    <span class="material-symbols-outlined text-[20px]">settings</span>
+                    <span class="font-label-lg text-label-lg">Админ-панель</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Нижний блок сайдбара -->
+        <div class="flex flex-col gap-space-md pt-space-md">
+            <div class="bg-surface-container-low rounded-lg p-space-md flex flex-col gap-space-xs">
+                <div class="flex items-center justify-between">
+                    <span class="font-label-sm text-label-sm text-on-surface-variant">Активных позиций</span>
+                    <span class="font-code-num text-code-num text-on-surface font-semibold">{{ products|length }}</span>
+                </div>
+                <div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+                    <div class="h-full bg-primary rounded-full" style="width: 100%;"></div>
+                </div>
+                <span class="font-label-sm text-label-sm text-on-surface-variant">Каталог синхронизирован</span>
+            </div>
+
+            <a href="{% url 'products:product_create' %}" class="w-full h-10 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container-high flex items-center justify-center gap-space-sm font-label-lg text-label-lg transition-colors">
+                <span class="material-symbols-outlined text-[18px]">add</span>
+                <span>Быстрое добавление</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Основная область контента -->
+    <div class="pl-72">
+        <!-- Верхняя шапка (Header) -->
+        <header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] z-40 flex items-center justify-between px-gutter">
+            <div class="flex items-center gap-space-md flex-1 max-w-xl">
+                <a href="{% url 'products:category_list' %}" class="flex items-center gap-space-xs bg-surface-container-low hover:bg-surface-container-high transition-colors px-space-md py-space-xs rounded-lg cursor-pointer">
+                    <span class="material-symbols-outlined text-tertiary text-[18px]">folder_open</span>
+                    <span class="font-label-md text-label-md text-on-surface font-medium whitespace-nowrap">Перейти к категориям</span>
+                    <span class="material-symbols-outlined text-outline text-[16px]">chevron_right</span>
                 </a>
             </div>
-        </div>
-    </nav>
 
-    <!-- Основной контент -->
-    <div class="container my-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 fw-bold text-dark">Каталог товаров</h1>
-            <span class="badge bg-primary fs-6">Активных товаров: {{ products|length }}</span>
-        </div>
+            <div class="flex items-center gap-space-lg">
+                <div class="flex items-center gap-space-sm pl-space-xs">
+                    <div class="flex flex-col text-right">
+                        <span class="font-label-md text-label-md text-on-surface font-semibold leading-tight">
+                            {{ request.user.username|default:"Администратор" }}
+                        </span>
+                        <span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">Управление каталогом</span>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                        <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-        <!-- Сетка карточек товаров -->
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            {% for product in products %}
-                <div class="col">
-                    <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
-                        
-                        <!-- Блок с фото товара -->
-                        {% if product.image %}
-                            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
-                        {% else %}
-                            <!-- Заглушка, если фото не загружено -->
-                            <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
-                                <span class="small text-uppercase tracking-wider">Нет фото</span>
+        <!-- Главный контейнер -->
+        <main class="w-full pt-24 px-gutter bg-surface min-h-screen">
+            <div class="flex flex-col w-full pb-16">
+
+                <!-- 4 карточки метрик (работают без изменения views.py) -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-space-xl">
+                    <div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-all">
+                        <div class="flex items-center justify-between">
+                            <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Всего номенклатур</span>
+                            <div class="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center text-primary">
+                                <span class="material-symbols-outlined text-[18px]">inventory_2</span>
                             </div>
-                        {% endif %}
-                        
-                        <div class="card-body d-flex flex-column">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="badge bg-info text-dark">{{ product.category.name|default:"Без категории" }}</span>
-                                <small class="text-muted">SKU: {{ product.sku }}</small>
+                        </div>
+                        <div class="mt-space-md flex items-baseline gap-space-sm">
+                            <span class="font-headline-lg text-headline-lg text-on-surface tracking-tight">{{ products|length }}</span>
+                            <span class="font-label-sm text-label-sm text-tertiary flex items-center">активных</span>
+                        </div>
+                        <div class="mt-space-xs text-on-surface-variant font-body-sm text-body-sm">В базе данных SmartStock</div>
+                    </div>
+
+                    <div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-all">
+                        <div class="flex items-center justify-between">
+                            <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Категории</span>
+                            <div class="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center text-secondary">
+                                <span class="material-symbols-outlined text-[18px]">category</span>
                             </div>
-                            
-                            <h5 class="card-title fw-bold text-dark">{{ product.name }}</h5>
-                            <p class="card-text text-muted small flex-grow-1">
-                                {{ product.description|default:"Описание отсутствует"|truncatechars:90 }}
-                            </p>
-                            
-                            <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
-                                <span class="text-secondary small">Ед: <strong>{{ product.unit.short_name|default:"шт" }}</strong></span>
-                                <!-- Исправленный тег url с учетом namespace 'products:' -->
-                                <a href="{% url 'products:product_detail' product.pk %}" class="btn btn-outline-dark btn-sm rounded-pill px-3">Открыть</a>
+                        </div>
+                        <div class="mt-space-md flex items-baseline gap-space-sm">
+                            <span class="font-headline-lg text-headline-lg text-on-surface tracking-tight" id="stat-cat-count">0</span>
+                            <span class="font-label-sm text-label-sm text-on-surface-variant">групп товаров</span>
+                        </div>
+                        <div class="mt-space-xs text-on-surface-variant font-body-sm text-body-sm">
+                            <a href="{% url 'products:category_list' %}" class="text-primary hover:underline">Открыть список →</a>
+                        </div>
+                    </div>
+
+                    <div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-all">
+                        <div class="flex items-center justify-between">
+                            <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Быстрое действие</span>
+                            <div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-secondary-container">
+                                <span class="material-symbols-outlined text-[18px]">add_circle</span>
                             </div>
+                        </div>
+                        <div class="mt-space-md flex items-baseline gap-space-sm">
+                            <a href="{% url 'products:product_create' %}" class="font-headline-sm text-headline-sm text-primary hover:underline">Создать товар</a>
+                        </div>
+                        <div class="mt-space-xs text-on-surface-variant font-body-sm text-body-sm">Добавление новой карточки</div>
+                    </div>
+
+                    <div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-all">
+                        <div class="flex items-center justify-between">
+                            <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Справочники</span>
+                            <div class="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center text-tertiary">
+                                <span class="material-symbols-outlined text-[18px]">create_new_folder</span>
+                            </div>
+                        </div>
+                        <div class="mt-space-md flex items-baseline gap-space-sm">
+                            <a href="{% url 'products:category_create' %}" class="font-headline-sm text-headline-sm text-tertiary hover:underline">+ Категория</a>
+                        </div>
+                        <div class="mt-space-xs text-on-surface-variant font-body-sm text-body-sm">Расширение классификатора</div>
+                    </div>
+                </div>
+
+                <!-- Заголовок и кнопки -->
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-lg">
+                    <div class="flex flex-col">
+                        <div class="flex items-center gap-space-xs text-primary font-label-md text-label-md font-medium mb-1">
+                            <span class="material-symbols-outlined text-[16px]">domain_verification</span>
+                            <span>Оперативный учёт номенклатуры</span>
+                        </div>
+                        <h1 class="font-headline-xl text-headline-xl text-on-surface font-semibold tracking-tight">Товары и остатки</h1>
+                        <p class="font-body-md text-body-md text-on-surface-variant mt-1">Быстрый поиск по артикулу, фильтрация по категориям и управление карточками</p>
+                    </div>
+
+                    <div class="flex items-center gap-space-sm self-start md:self-auto">
+                        <a href="{% url 'products:category_list' %}" class="px-space-md py-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg shadow-sm flex items-center gap-space-xs transition-colors">
+                            <span class="material-symbols-outlined text-[18px] text-on-surface-variant">category</span>
+                            <span>Категории</span>
+                        </a>
+                        <a href="{% url 'products:product_create' %}" class="px-space-lg py-2.5 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg shadow-sm flex items-center gap-space-xs transition-all active:scale-[0.99]">
+                            <span class="material-symbols-outlined text-[18px]">add</span>
+                            <span>Новый товар</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Панель поиска и авто-фильтра категорий -->
+                <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm mb-space-lg flex flex-col gap-space-md">
+                    <div class="flex flex-col lg:flex-row items-stretch lg:items-center gap-space-md">
+                        <!-- Поле поиска -->
+                        <div class="relative flex-1">
+                            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+                            <input class="w-full h-11 pl-11 pr-10 bg-surface-container-low rounded-lg text-on-surface placeholder:text-outline font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" id="product-search" placeholder="Поиск по названию, категории или SKU..." type="text" />
+                            <button class="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface hidden" id="clear-search" type="button">
+                                <span class="material-symbols-outlined text-[18px]">close</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Таблетки категорий (автоматически создаются из товаров в таблице) -->
+                    <div class="flex items-center justify-between flex-wrap gap-space-sm pt-space-xs">
+                        <div class="flex items-center gap-space-xs flex-wrap" id="category-pills">
+                            <button class="cat-pill active px-3.5 py-1.5 rounded-full font-label-md text-label-md bg-primary-container text-on-primary font-medium transition-all shadow-sm" data-category="all" type="button">
+                                Все категории
+                            </button>
                         </div>
                     </div>
                 </div>
-            {% empty %}
-                <div class="col-12 text-center py-5">
-                    <div class="alert alert-warning py-4" role="alert">
-                        <h4 class="alert-heading">Товары не найдены!</h4>
-                        <p class="mb-0">В базе данных пока нет активных товаров. Добавьте их через кнопку выше или админ-панель.</p>
+
+                <!-- Таблица товаров -->
+                <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse" id="products-table">
+                            <thead>
+                                <tr class="bg-surface-container-low/60 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider select-none">
+                                    <th class="py-3.5 px-space-lg font-medium w-12 text-center">
+                                        <input class="rounded accent-primary cursor-pointer w-4 h-4" id="select-all" type="checkbox" />
+                                    </th>
+                                    <th class="py-3.5 px-space-md font-semibold">Товар</th>
+                                    <th class="py-3.5 px-space-md font-semibold">Категория</th>
+                                    <th class="py-3.5 px-space-md font-semibold text-right">Ед. изм.</th>
+                                    <th class="py-3.5 px-space-md font-semibold text-right">Мин. остаток</th>
+                                    <th class="py-3.5 px-space-md font-semibold text-center">Статус</th>
+                                    <th class="py-3.5 px-space-lg font-semibold text-right">Быстрое действие</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-surface-container-high/40 text-body-md font-body-md text-on-surface" id="table-body">
+                                {% for product in products %}
+                                    <tr class="product-row hover:bg-surface-container-low/50 transition-colors group"
+                                        data-category="{{ product.category.name|default:'Без категории' }}">
+                                        
+                                        <td class="py-4 px-space-lg text-center">
+                                            <input class="item-check rounded accent-primary cursor-pointer w-4 h-4" type="checkbox" />
+                                        </td>
+
+                                        <!-- Фото / Иконка, Название и SKU -->
+                                        <td class="py-4 px-space-md">
+                                            <div class="flex items-center gap-space-md">
+                                                <a href="{% url 'products:product_detail' product.pk %}" class="w-10 h-10 rounded-lg bg-surface-container-high flex-shrink-0 flex items-center justify-center text-primary group-hover:scale-105 transition-transform overflow-hidden shadow-sm">
+                                                    {% if product.image %}
+                                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover" />
+                                                    {% else %}
+                                                        <span class="material-symbols-outlined text-[20px]">package_2</span>
+                                                    {% endif %}
+                                                </a>
+                                                <div class="flex flex-col min-w-0">
+                                                    <a href="{% url 'products:product_detail' product.pk %}" class="font-headline-sm text-headline-sm text-on-surface truncate group-hover:text-primary transition-colors">
+                                                        {{ product.name }}
+                                                    </a>
+                                                    <div class="flex items-center gap-space-xs mt-0.5">
+                                                        <span class="font-code-num text-code-num text-outline">SKU: {{ product.sku }}</span>
+                                                        {% if product.description %}
+                                                            <span class="text-outline-variant">•</span>
+                                                            <span class="font-label-sm text-label-sm text-on-surface-variant truncate max-w-[220px]">{{ product.description|truncatechars:40 }}</span>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <!-- Категория -->
+                                        <td class="py-4 px-space-md">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-surface-container-low font-label-md text-label-md text-on-surface-variant font-medium">
+                                                {{ product.category.name|default:"Без категории" }}
+                                            </span>
+                                        </td>
+
+                                        <!-- Единица измерения -->
+                                        <td class="py-4 px-space-md text-right font-code-num text-code-num text-on-surface">
+                                            {{ product.unit.name|default:"Штука" }} ({{ product.unit.short_name|default:"шт" }})
+                                        </td>
+
+                                        <!-- Минимальный порог остатка -->
+                                        <td class="py-4 px-space-md text-right">
+                                            <span class="font-headline-sm text-headline-sm text-on-surface font-semibold font-code-num">{{ product.min_stock_level }}</span>
+                                            <span class="font-label-sm text-label-sm text-outline ml-0.5">{{ product.unit.short_name|default:"шт" }}</span>
+                                        </td>
+
+                                        <!-- Статус активности -->
+                                        <td class="py-4 px-space-md text-center">
+                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-surface-container-high text-primary">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                                                Активен
+                                            </span>
+                                        </td>
+
+                                        <!-- Действия: Открыть, Редактировать, Архивировать -->
+                                        <td class="py-4 px-space-lg text-right">
+                                            <div class="flex items-center justify-end gap-space-xs opacity-90 group-hover:opacity-100 transition-opacity">
+                                                <a href="{% url 'products:product_detail' product.pk %}" class="p-1.5 rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors" title="Открыть карточку">
+                                                    <span class="material-symbols-outlined text-[18px]">visibility</span>
+                                                </a>
+                                                <a href="{% url 'products:product_update' product.pk %}" class="p-1.5 rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Редактировать">
+                                                    <span class="material-symbols-outlined text-[18px]">edit</span>
+                                                </a>
+                                                <form action="{% url 'products:product_archive' product.pk %}" method="post" class="inline" onsubmit="return confirm('Отправить товар «{{ product.name }}» в архив?');">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="p-1.5 rounded-lg hover:bg-error-container text-on-surface-variant hover:text-error transition-colors" title="В архив">
+                                                        <span class="material-symbols-outlined text-[18px]">archive</span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Пустое состояние -->
+                    <div class="{% if products %}hidden{% endif %} py-16 flex flex-col items-center justify-center text-center" id="no-results">
+                        <div class="w-12 h-12 rounded-full bg-surface-container-low flex items-center justify-center text-outline mb-space-sm">
+                            <span class="material-symbols-outlined text-[24px]">inventory_2</span>
+                        </div>
+                        <h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Ничего не найдено</h3>
+                        <p class="font-body-md text-body-md text-on-surface-variant max-w-sm mb-space-md">
+                            Попробуйте изменить поисковый запрос, сбросить фильтр категорий или добавьте новый товар
+                        </p>
+                        <div class="flex gap-2">
+                            <button class="px-space-md py-1.5 rounded-lg bg-surface-container-low text-primary font-label-md text-label-md" id="reset-filters" type="button">
+                                Сбросить фильтры
+                            </button>
+                            <a href="{% url 'products:product_create' %}" class="px-space-md py-1.5 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md">
+                                + Добавить товар
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Подвал таблицы -->
+                    <div class="px-space-lg py-space-md bg-surface-container-lowest flex flex-col sm:flex-row items-center justify-between gap-space-md select-none border-t border-surface-container-high/40">
+                        <div class="flex items-center gap-space-sm">
+                            <span class="font-label-md text-label-md text-on-surface-variant">
+                                Показано товаров: <span class="font-medium text-on-surface" id="visible-count">{{ products|length }}</span> из <span class="font-medium text-on-surface">{{ products|length }}</span>
+                            </span>
+                        </div>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
+
+            </div>
+        </main>
     </div>
 
+    <!-- Скрипт поиска и автоматической генерации кнопок категорий из таблицы -->
+    <script>
+        (function () {
+            const searchInput = document.getElementById('product-search');
+            const clearBtn = document.getElementById('clear-search');
+            const pillsContainer = document.getElementById('category-pills');
+            const rows = document.querySelectorAll('.product-row');
+            const noResults = document.getElementById('no-results');
+            const resetFiltersBtn = document.getElementById('reset-filters');
+            const selectAll = document.getElementById('select-all');
+            const itemChecks = document.querySelectorAll('.item-check');
+            const visibleCountEl = document.getElementById('visible-count');
+            const statCatCountEl = document.getElementById('stat-cat-count');
+
+            let currentCategory = 'all';
+
+            // 1. Автоматически собираем уникальные категории из строк таблицы (без изменения views.py!)
+            const categoriesSet = new Set();
+            rows.forEach(row => {
+                const cat = row.getAttribute('data-category');
+                if (cat) categoriesSet.add(cat);
+            });
+
+            if (statCatCountEl) {
+                statCatCountEl.textContent = categoriesSet.size;
+            }
+
+            categoriesSet.forEach(catName => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'cat-pill px-3.5 py-1.5 rounded-full font-label-md text-label-md bg-surface-container-low hover:bg-surface-container-high text-on-surface-variant transition-all';
+                btn.setAttribute('data-category', catName);
+                btn.textContent = catName;
+                pillsContainer.appendChild(btn);
+            });
+
+            const catPills = document.querySelectorAll('.cat-pill');
+
+            // 2. Обработка клика по категориям
+            catPills.forEach(pill => {
+                pill.addEventListener('click', () => {
+                    catPills.forEach(p => {
+                        p.classList.remove('bg-primary-container', 'text-on-primary', 'shadow-sm', 'font-medium');
+                        p.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+                    });
+                    pill.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+                    pill.classList.add('bg-primary-container', 'text-on-primary', 'shadow-sm', 'font-medium');
+                    currentCategory = pill.getAttribute('data-category');
+                    filterRows();
+                });
+            });
+
+            // 3. Поиск
+            if (searchInput) {
+                searchInput.addEventListener('input', () => {
+                    clearBtn.style.display = searchInput.value.length > 0 ? 'block' : 'none';
+                    filterRows();
+                });
+            }
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', () => {
+                    searchInput.value = '';
+                    clearBtn.style.display = 'none';
+                    searchInput.focus();
+                    filterRows();
+                });
+            }
+
+            // 4. Фильтрация строк
+            function filterRows() {
+                const term = searchInput ? searchInput.value.toLowerCase().trim() : '';
+                let visibleCount = 0;
+
+                rows.forEach(row => {
+                    const text = row.innerText.toLowerCase();
+                    const cat = row.getAttribute('data-category');
+
+                    const matchesSearch = !term || text.includes(term);
+                    const matchesCategory = (currentCategory === 'all') || (cat === currentCategory);
+
+                    if (matchesSearch && matchesCategory) {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                if (visibleCountEl) {
+                    visibleCountEl.textContent = visibleCount;
+                }
+
+                if (noResults) {
+                    if (visibleCount === 0) {
+                        noResults.classList.remove('hidden');
+                    } else {
+                        noResults.classList.add('hidden');
+                    }
+                }
+            }
+
+            // 5. Сброс фильтров
+            if (resetFiltersBtn) {
+                resetFiltersBtn.addEventListener('click', () => {
+                    if (searchInput) searchInput.value = '';
+                    if (clearBtn) clearBtn.style.display = 'none';
+                    if (catPills.length > 0) catPills[0].click();
+                });
+            }
+
+            // 6. Чекбокс «Выбрать все»
+            if (selectAll) {
+                selectAll.addEventListener('change', () => {
+                    itemChecks.forEach(cb => {
+                        cb.checked = selectAll.checked;
+                    });
+                });
+            }
+        })();
+    </script>
 </body>
 </html>

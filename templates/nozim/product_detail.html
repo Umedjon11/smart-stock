@@ -11,7 +11,6 @@
     <!-- Навигация -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
         <div class="container">
-            <!-- Исправлен URL с учетом namespace 'products:' -->
             <a class="navbar-brand fw-bold" href="{% url 'products:product_list' %}">📦 SmartStock</a>
             <span class="text-white-50">Карточка товара</span>
         </div>
@@ -20,7 +19,6 @@
     <!-- Основной контент карточки -->
     <div class="container my-5">
         <div class="mb-3">
-            <!-- Исправлен URL с учетом namespace 'products:' -->
             <a href="{% url 'products:product_list' %}" class="btn btn-outline-secondary btn-sm rounded-pill">
                 ← Назад к каталогу
             </a>
@@ -64,11 +62,20 @@
                             </div>
                         </div>
 
+                        <!-- Добавленная часть для перехода к редактированию -->
                         <div class="mt-auto d-flex gap-2">
-                            <!-- Ссылка для редактирования в админке -->
-                            <a href="{% url 'admin:products_product_change' product.pk %}" target="_blank" class="btn btn-dark rounded-pill px-4">
-                                Редактировать в админке
+                            <!-- Ссылка на редактирование товара -->
+                            <a href="{% url 'products:product_update' product.pk %}" class="btn btn-dark rounded-pill px-4">
+                                Редактировать товар
                             </a>
+
+                            <!-- Кнопка архивирования (использует POST-запрос для безопасности) -->
+                            <form action="{% url 'products:product_archive' product.pk %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger rounded-pill px-4" onclick="return confirm('Вы уверены, что хотите архивировать этот товар?');">
+                                    В архив
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
