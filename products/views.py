@@ -32,16 +32,7 @@ class ProductDetail(DetailView):
 class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
 
-    fields = [
-        'sku',
-        'name',
-        'category',
-        'unit',
-        'description',
-        'min_stock_level',
-        'image',
-        'is_active'
-    ]
+    fields = ['sku','name','category','unit','description','min_stock_level','image','is_active']
 
     template_name='nozim/product_form.html'
     success_url = reverse_lazy('products:product_list')
