@@ -1,60 +1,194 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://cdn.tailwindcss.com"></script>
 
-{% block content %}
-<div class="employee-card">
+<div class="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 px-4 py-10 sm:px-6">
 
-    <a href="{% url 'employee_list' %}">← Назад к списку</a>
+    <div class="mx-auto max-w-4xl">
 
-    <div class="employee-header">
+        <!-- Back button -->
+        <a href="{% url 'employee_list' %}"
+           class="mb-6 inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700">
+            <span class="text-lg">←</span>
+            Назад к списку
+        </a>
 
-        {% if employee.photo %}
-        <img src="{{ employee.photo.url }}" alt="{{ employee.user.username }}">
-        {% endif %}
+        <!-- Employee card -->
+        <div class="overflow-hidden rounded-3xl border border-white bg-white shadow-xl shadow-blue-900/5">
 
-        <div>
-            <h1>{{ employee.user.username }}</h1>
-            <span>{{ employee.get_position_display }}</span>
+            <!-- Top accent -->
+            <div class="h-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600"></div>
+
+            <div class="p-6 sm:p-10">
+
+                <!-- Employee header -->
+                <div class="flex flex-col gap-5 border-b border-slate-100 pb-8 sm:flex-row sm:items-center">
+
+                    {% if employee.photo %}
+                        <img
+                            src="{{ employee.photo.url }}"
+                            alt="{{ employee.user.username }}"
+                            class="h-24 w-24 rounded-2xl border-4 border-white object-cover shadow-lg ring-1 ring-slate-200"
+                        >
+                    {% else %}
+                        <div class="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-4xl font-bold text-white shadow-lg shadow-blue-600/20">
+                            {{ employee.user.username|first|upper }}
+                        </div>
+                    {% endif %}
+
+                    <div class="min-w-0 flex-1">
+                        <p class="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-blue-600">
+                            SmartStock · Сотрудник
+                        </p>
+
+                        <h1 class="break-words text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
+                            {{ employee.user.username }}
+                        </h1>
+
+                        <span class="mt-3 inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-semibold text-blue-700">
+                            <span class="h-2 w-2 rounded-full bg-blue-500"></span>
+                            {{ employee.get_position_display }}
+                        </span>
+                    </div>
+
+                </div>
+
+                <!-- Information title -->
+                <div class="mb-6 mt-8">
+                    <h2 class="text-xl font-bold text-slate-900">
+                        Информация о сотруднике
+                    </h2>
+                    <p class="mt-1 text-sm text-slate-500">
+                        Основные личные и контактные данные
+                    </p>
+                </div>
+
+                <!-- Information grid -->
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                    <!-- Email -->
+                    <div class="rounded-2xl border border-slate-100 bg-slate-50 p-5 transition hover:border-blue-100 hover:bg-blue-50/50">
+                        <div class="mb-3 flex items-center gap-3">
+                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-xl">
+                                ✉
+                            </div>
+                            <p class="text-sm font-medium text-slate-500">Email</p>
+                        </div>
+                        <p class="break-words text-sm font-semibold text-slate-800">
+                            {{ employee.user.email|default:"Не указан" }}
+                        </p>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="rounded-2xl border border-slate-100 bg-slate-50 p-5 transition hover:border-blue-100 hover:bg-blue-50/50">
+                        <div class="mb-3 flex items-center gap-3">
+                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-xl">
+                                ☎
+                            </div>
+                            <p class="text-sm font-medium text-slate-500">Телефон</p>
+                        </div>
+                        <p class="break-words text-sm font-semibold text-slate-800">
+                            {{ employee.phone|default:"Не указан" }}
+                        </p>
+                    </div>
+
+                    <!-- Position -->
+                    <div class="rounded-2xl border border-slate-100 bg-slate-50 p-5 transition hover:border-blue-100 hover:bg-blue-50/50">
+                        <div class="mb-3 flex items-center gap-3">
+                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 text-xl">
+                                💼
+                            </div>
+                            <p class="text-sm font-medium text-slate-500">Должность</p>
+                        </div>
+                        <p class="break-words text-sm font-semibold text-slate-800">
+                            {{ employee.get_position_display }}
+                        </p>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="rounded-2xl border border-slate-100 bg-slate-50 p-5 transition hover:border-blue-100 hover:bg-blue-50/50">
+                        <div class="mb-3 flex items-center gap-3">
+                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-xl">
+                                📍
+                            </div>
+                            <p class="text-sm font-medium text-slate-500">Адрес</p>
+                        </div>
+                        <p class="break-words text-sm font-semibold text-slate-800">
+                            {{ employee.address|default:"Не указан" }}
+                        </p>
+                    </div>
+
+                    <!-- Birth date -->
+                    <div class="rounded-2xl border border-slate-100 bg-slate-50 p-5 transition hover:border-blue-100 hover:bg-blue-50/50">
+                        <div class="mb-3 flex items-center gap-3">
+                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-pink-100 text-xl">
+                                🎂
+                            </div>
+                            <p class="text-sm font-medium text-slate-500">Дата рождения</p>
+                        </div>
+                        <p class="break-words text-sm font-semibold text-slate-800">
+                            {{ employee.birth_date|date:"d.m.Y"|default:"Не указана" }}
+                        </p>
+                    </div>
+
+                    <!-- Registration date -->
+                    <div class="rounded-2xl border border-slate-100 bg-slate-50 p-5 transition hover:border-blue-100 hover:bg-blue-50/50">
+                        <div class="mb-3 flex items-center gap-3">
+                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100 text-xl">
+                                📅
+                            </div>
+                            <p class="text-sm font-medium text-slate-500">Дата регистрации</p>
+                        </div>
+                        <p class="break-words text-sm font-semibold text-slate-800">
+                            {{ employee.created_at|date:"d.m.Y"|default:"Не указана" }}
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- Actions -->
+                {% if user.is_superuser or user.employee_profile.position == 'manager' %}
+                    <div class="mt-8 flex flex-col gap-3 border-t border-slate-100 pt-7 sm:flex-row sm:justify-end">
+
+                        <a href="{% url 'update_employee' employee.pk %}"
+                           class="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition hover:-translate-y-0.5 hover:bg-blue-700">
+                            ✏️ Редактировать
+                        </a>
+
+                            <form method="post"
+                                  action="{% url 'delete_employee' employee.pk %}"
+                                  onsubmit="return confirm('Вы уверены, что хотите удалить сотрудника?');">
+                                {% csrf_token %}
+
+                                <button type="submit"
+                                        class="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-red-200 bg-white px-6 py-3 text-sm font-bold text-red-600 transition hover:border-red-300 hover:bg-red-50 sm:w-auto">
+                                    🗑 Удалить
+                                </button>
+                            </form>
+
+
+                    </div>
+                {% endif %}
+
+            </div>
+
+            <!-- Footer -->
+            <div class="border-t border-slate-100 bg-slate-50/80 px-6 py-4 text-center text-xs text-slate-400">
+                SmartStock · Система управления складом
+            </div>
+
         </div>
 
     </div>
 
-    <hr>
-
-    <h2>Информация о сотруднике</h2>
-
-    <p>Email: {{ employee.user.email|default:"Не указан" }}</p>
-    <p>Телефон: {{ employee.phone|default:"Не указан" }}</p>
-    <p>Должность: {{ employee.get_position_display }}</p>
-    <p>Адрес: {{ employee.address|default:"Не указан" }}</p>
-
-    <p>
-        Дата рождения:
-        {{ employee.birth_date|date:"d.m.Y"|default:"Не указана" }}
-    </p>
-
-    <p>
-        Дата регистрации:
-        {{ employee.created_at|date:"d.m.Y" }}
-    </p>
-    
-    {% if user.is_superuser or user.employee_profile.position == 'manager' %}
-    <div class="employee-actions">
-        <a href="{% url 'update_employee' employee.pk %}" class="employee-edit-btn">
-            ✏️ Редактировать
-        </a>
-
-        {% if user.is_superuser %}
-        <form method="post" action="{% url 'delete_employee' employee.pk %}"
-            onsubmit="return confirm('Вы уверены, что хотите удалить сотрудника?');">
-            {% csrf_token %}
-            <button type="submit" class="employee-delete-btn">
-                🗑 Удалить
-            </button>
-        </form>
-        {% endif %}
-    </div>
-    {% endif %}
-    
-
 </div>
-{% endblock %}
+
+
+</body>
+</html>
