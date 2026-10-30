@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Категории товаров — SmartStock</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{% url 'products:product_list' %}">📦 SmartStock</a>
+            <div class="d-flex gap-3">
+                <a href="{% url 'products:product_list' %}" class="btn btn-outline-light btn-sm">Каталог товаров</a>
+                <a href="{% url 'products:category_create' %}" class="btn btn-primary btn-sm">+ Новая категория</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5" style="max-width: 800px;">
+        <h1 class="h3 fw-bold mb-4">Категории товаров</h1>
+
+        <div class="card shadow-sm border-0 rounded-4 p-4 bg-white">
+            <ul class="list-group list-group-flush">
+                {% for category in categories %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                        <span class="fw-semibold fs-5">{{ category.name }}</span>
+                        <span class="badge bg-secondary rounded-pill">ID: {{ category.pk }}</span>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item text-center py-4 text-muted">
+                        Категорий пока нет. Создайте первую через кнопку выше!
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>
