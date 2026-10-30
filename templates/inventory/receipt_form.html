@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новое поступление — SmartStock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased">
+    <div class="min-h-screen flex flex-col">
+        <header class="bg-white shadow-sm border-b border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <span class="text-2xl">📦</span>
+                    <h1 class="text-xl font-bold text-gray-800">SmartStock <span class="text-sm font-normal text-gray-500">| Управление складом</span></h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="text-sm text-gray-600">Пользователь: <strong class="text-gray-800">{{ request.user.username|default:"Гость" }}</strong></span>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-6 flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900">Создание нового поступления</h2>
+                    <p class="text-sm text-gray-500">Заполните реквизиты документа и добавьте один или несколько товаров.</p>
+                </div>
+                <a href="{% url 'receipt_list' %}" class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800 bg-white border border-gray-300 px-4 py-2 rounded-lg shadow-sm transition-colors">
+                    &larr; Назад к списку
+                </a>
+            </div>
+
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-medium text-gray-800 mb-4">Параметры документа</h3>
+                    
+                    {% if form.errors or formset.errors %}
+                        <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+                            Пожалуйста, проверьте правильность заполнения полей формы.
+                        </div>
+                    {% endif %}
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Номер документа</label>
+                            {{ form.number }}
+                            {{ form.number.errors }}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Склад</label>
+                            {{ form.warehouse }}
+                            {{ form.warehouse.errors }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium text-gray-800">Позиции товаров</h3>
+                        <button type="button" id="add-item-btn" class="inline-flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors shadow-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+                            Добавить товар
+                        </button>
+                    </div>
+                    
+                    {{ formset.management_form }}
+                    
+                    <div id="formset-container" class="space-y-4">
+                        {% for item_form in formset %}
+                            <div class="form-row flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                <div class="flex-grow w-full">
+                                    <label class="block text-xs font-medium text-gray-500 mb-1">Товар</label>
+                                    {{ item_form.product }}
+                                    {{ item_form.product.errors }}
+                                </div>
+                                <div class="w-full sm:w-40">
+                                    <label class="block text-xs font-medium text-gray-500 mb-1">Количество</label>
+                                    {{ item_form.quantity }}
+                                    {{ item_form.quantity.errors }}
+                                </div>
+                                {% if formset.can_delete %}
+                                <div class="w-full sm:w-auto flex items-center justify-end sm:pt-6">
+                                    <label class="inline-flex items-center text-xs text-red-600 hover:text-red-800 cursor-pointer">
+                                        {{ item_form.DELETE }} <span class="ml-1">Удалить</span>
+                                    </label>
+                                </div>
+                                {% endif %}
+                                {% for hidden in item_form.hidden_fields %}
+                                    {{ hidden }}
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div id="empty-form" class="hidden">
+                    <div class="form-row flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <div class="flex-grow w-full">
+                            <label class="block text-xs font-medium text-gray-500 mb-1">Товар</label>
+                            {{ formset.empty_form.product }}
+                        </div>
+                        <div class="w-full sm:w-40">
+                            <label class="block text-xs font-medium text-gray-500 mb-1">Количество</label>
+                            {{ formset.empty_form.quantity }}
+                        </div>
+                        {% if formset.can_delete %}
+                        <div class="w-full sm:w-auto flex items-center justify-end sm:pt-6">
+                            <label class="inline-flex items-center text-xs text-red-600 hover:text-red-800 cursor-pointer">
+                                {{ formset.empty_form.DELETE }} <span class="ml-1">Удалить</span>
+                            </label>
+                        </div>
+                        {% endif %}
+                        {% for hidden in formset.empty_form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-4">
+                    <a href="{% url 'receipt_list' %}" class="px-6 py-2.5 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 rounded-lg text-sm font-medium transition-colors">
+                        Отмена
+                    </a>
+                    <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors shadow-sm">
+                        Сохранить поступление
+                    </button>
+                </div>
+            </form>
+        </main>
+
+        <footer class="bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-500">
+            SmartStock &copy; 2026 — Система складского учёта
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('add-item-btn').addEventListener('click', function () {
+            const container = document.getElementById('formset-container');
+            const totalFormsInput = document.getElementById('{{ formset.management_form.TOTAL_FORMS.auto_id }}');
+            let formCount = parseInt(totalFormsInput.value);
+
+            const emptyFormHtml = document.getElementById('empty-form').innerHTML;
+            const newFormHtml = emptyFormHtml.replace(/__prefix__/g, formCount);
+
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = newFormHtml;
+            container.appendChild(tempDiv.firstElementChild);
+
+            totalFormsInput.value = formCount + 1;
+        });
+    </script>
+</body>
+</html>
