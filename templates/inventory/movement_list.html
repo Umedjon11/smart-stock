@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>История движений — SmartStock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased">
+
+    <div class="min-h-screen flex flex-col">
+        <header class="bg-white shadow-sm border-b border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <span class="text-2xl">📦</span>
+                    <h1 class="text-xl font-bold text-gray-800">SmartStock <span class="text-sm font-normal text-gray-500">| Управление складом</span></h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="text-sm text-gray-600">Пользователь: <strong class="text-gray-800">{{ request.user.username|default:"Гость" }}</strong></span>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            
+            <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900">История движений запасов</h2>
+                    <p class="text-sm text-gray-500">Журнал всех приходов, уходов и перемещений товаров.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                <form method="get" class="w-full flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="w-full md:w-1/3">
+                        <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Поиск по документу..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                    </div>
+                    <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+                        <select name="type" class="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Все типы движений</option>
+                            <option value="in" {% if request.GET.type == 'in' %}selected{% endif %}>Приход</option>
+                            <option value="out" {% if request.GET.type == 'out' %}selected{% endif %}>Уход (Списание)</option>
+                            <option value="trans_in" {% if request.GET.type == 'trans_in' %}selected{% endif %}>Перемещение (приход)</option>
+                            <option value="trans_out" {% if request.GET.type == 'trans_out' %}selected{% endif %}>Перемещение (уход)</option>
+                        </select>
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Применить</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID / Дата</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Тип операции</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Связанный документ</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Склад / Пользователь</th>
+                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for movement in movements %}
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">#{{ movement.id }}</div>
+                                    <div class="text-xs text-gray-500">{{ movement.created_at|date:"d.m.Y H:i" }}</div>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {% if movement.type == 'in' %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            Приход
+                                        </span>
+                                    {% elif movement.type == 'out' %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            Уход
+                                        </span>
+                                    {% elif movement.type == 'trans_in' %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            Перемещение (приход)
+                                        </span>
+                                    {% elif movement.type == 'trans_out' %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                                            Перемещение (уход)
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                    {% if movement.receipt %}
+                                        <h1 class="text-blue-600 hover:underline">Поступление №{{ movement.receipt.number }}</h1>
+                                    {% elif movement.write_off %}
+                                        <h1 class="text-blue-600 hover:underline">Списание №{{ movement.write_off.number }}</h1>
+                                    {% elif movement.transfer %}
+                                        <h1 class="text-blue-600 hover:underline">Перемещение №{{ movement.transfer.pk }}</h1>
+                                    {% else %}
+                                        <span class="text-gray-400">Прямая операция</span>
+                                    {% endif %}
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                    {% if movement.receipt %}
+                                        <div class="font-medium text-gray-900">{{ movement.receipt.warehouse.name }}</div>
+                                        <div class="text-xs text-gray-400">Автор: {{ movement.receipt.user.username }}</div>
+                                    {% elif movement.write_off %}
+                                        <div class="font-medium text-gray-900">{{ movement.write_off.warehouse.name }}</div>
+                                        <div class="text-xs text-gray-400">Автор: {{ movement.write_off.user.username }}</div>
+                                    {% elif movement.transfer %}
+                                        <div class="font-medium text-gray-900">Перемещение между складами</div>
+                                    {% else %}
+                                        <span class="text-gray-400">—</span>
+                                    {% endif %}
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <a href="{% url 'movement_detail' movement.pk %}" class="text-blue-600 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors">Детали</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                                    <div class="flex flex-col items-center justify-center space-y-2">
+                                        <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                                        </svg>
+                                        <span class="text-base font-medium">История движений пуста</span>
+                                        <span class="text-xs text-gray-400">Проведенные поступления, списания и перемещения появятся здесь.</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6 flex items-center justify-between">
+                    <div class="text-sm text-gray-700">
+                        Всего записей: <span class="font-medium">{{ movements.count }}</span>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <footer class="bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-500">
+            SmartStock &copy; 2026 — Система складского учёта
+        </footer>
+    </div>
+
+</body>
+</html>

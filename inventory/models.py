@@ -13,7 +13,7 @@ class StockReceipt(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{ self.movment } - №{ self.number }'
+        return f'{ self.rec_mov } - №{ self.number }'
 
 
 class ReceiptItem(models.Model):
@@ -56,13 +56,13 @@ class StockMovement(models.Model):
     )
 
     type = models.CharField(choices=MOVMENT_TYPES, default='in', max_length=50)
-    receipt = models.ForeignKey(StockReceipt, on_delete=models.CASCADE, related_name='rec_mov', null=True)
-    write_off = models.ForeignKey(StockWriteOff, on_delete=models.CASCADE, related_name='off_mov', null=True)
-    transfer = models.ForeignKey(StockTransfer, on_delete=models.CASCADE, related_name='trans_mov', null=True)
+    receipt = models.ForeignKey(StockReceipt, on_delete=models.CASCADE, related_name='rec_mov', null=True, blank=True)
+    write_off = models.ForeignKey(StockWriteOff, on_delete=models.CASCADE, related_name='off_mov', null=True, blank=True)
+    transfer = models.ForeignKey(StockTransfer, on_delete=models.CASCADE, related_name='trans_mov', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['-created_at']
 
     def __str__(self):
-        return f'{ self.product.name } - { self.warehouse.name } - { self.type }'
+        return f'{ self.receipt.warehouse.name if self.receipt else self.write_off.warehouse.name if self.write_off else self.transfer.warehouse.name } - { self.type }'
