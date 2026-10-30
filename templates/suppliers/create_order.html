@@ -4,16 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Создать заказ</title>
+    <title>Создать заказ | Smart Stock</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen bg-slate-100 flex items-center justify-center p-5">
 
-<div class="w-full max-w-2xl">
+<body class="min-h-screen bg-slate-100 py-10 px-4">
 
+<div class="max-w-3xl mx-auto">
+
+    <!-- Header -->
     <div class="mb-6">
         <a href="{% url 'order_list' %}"
-           class="text-sm font-medium text-slate-500 hover:text-indigo-600">
+           class="text-sm text-slate-500 hover:text-indigo-600">
             ← Назад к заказам
         </a>
 
@@ -21,168 +23,266 @@
             <div class="w-14 h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-2xl">
                 📦
             </div>
+
             <div>
-                <h1 class="text-2xl font-bold text-slate-800">Создать заказ</h1>
-                <p class="text-sm text-slate-500">Новый заказ поставщику Smart Stock</p>
+                <h1 class="text-2xl font-bold text-slate-800">
+                    Создать заказ
+                </h1>
+                <p class="text-sm text-slate-500">
+                    Новый заказ поставщику Smart Stock
+                </p>
             </div>
         </div>
     </div>
 
+    <!-- Form Card -->
     <div class="bg-white rounded-3xl shadow-xl border border-slate-200 p-6 sm:p-8">
 
-        <form method="post" class="space-y-6">
+        <form method="post">
             {% csrf_token %}
 
-            <div>
-                <h2 class="text-lg font-bold text-slate-800">Информация о заказе</h2>
-                <p class="text-sm text-slate-500 mt-1">Выберите поставщика и добавьте примечание.</p>
+            <!-- Order information -->
+            <div class="mb-8">
+                <h2 class="text-lg font-bold text-slate-800 mb-1">
+                    Информация о заказе
+                </h2>
+
+                <p class="text-sm text-slate-500 mb-5">
+                    Выберите поставщика и добавьте примечание.
+                </p>
+
+                {% for field in form %}
+                    <div class="mb-5">
+
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">
+                            {{ field.label }}
+
+                            {% if field.field.required %}
+                                <span class="text-red-500">*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ field }}
+
+                        {% for error in field.errors %}
+                            <p class="text-sm text-red-500 mt-2">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+
+                    </div>
+                {% endfor %}
             </div>
 
-            {% for field in form %}
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">
-                        {{ field.label }}
-                        {% if field.field.required %}
-                            <span class="text-red-500">*</span>
-                        {% endif %}
-                    </label>
+            <!-- Products -->
+            <div class="border-t border-slate-200 pt-6">
 
-                    {{ field }}
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
 
-                    {% for error in field.errors %}
-                        <p class="text-sm text-red-500 mt-2">{{ error }}</p>
-                    {% endfor %}
-                </div>
-            {% endfor %}
-
-            <div class="border-t pt-6">
-                <div class="flex justify-between items-center mb-4">
                     <div>
-                        <h2 class="text-lg font-bold text-slate-800">Товары заказа</h2>
-                        <p class="text-sm text-slate-500">Добавьте товары и укажите количество и цену.</p>
+                        <h2 class="text-lg font-bold text-slate-800">
+                            Товары заказа
+                        </h2>
+
+                        <p class="text-sm text-slate-500">
+                            Выберите товары, количество и цену.
+                        </p>
                     </div>
 
-                    <button type="button" id="add-item"
-                        class="bg-indigo-50 text-indigo-600 px-4 py-2 rounded-xl font-semibold hover:bg-indigo-100">
+                    <button type="button"
+                            id="add-item"
+                            class="bg-indigo-50 text-indigo-600 px-4 py-2.5 rounded-xl font-semibold hover:bg-indigo-100">
                         + Добавить товар
                     </button>
+
                 </div>
 
                 {{ item_formset.management_form }}
 
+                {% if item_formset.non_form_errors %}
+                    <div class="bg-red-50 text-red-600 p-3 rounded-xl mb-4 text-sm">
+                        {{ item_formset.non_form_errors }}
+                    </div>
+                {% endif %}
+
                 <div id="items-container" class="space-y-4">
+
                     {% for item in item_formset %}
+
                         <div class="item-row bg-slate-50 border border-slate-200 rounded-2xl p-4">
+
                             {% for hidden in item.hidden_fields %}
                                 {{ hidden }}
                             {% endfor %}
 
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
                                 {% for field in item.visible_fields %}
+
                                     {% if field.name != 'DELETE' %}
+
                                         <div>
-                                            <label class="block text-sm font-medium text-slate-700 mb-2">
+
+                                            <label class="block text-sm font-semibold text-slate-700 mb-2">
                                                 {{ field.label }}
                                             </label>
-                                            {{ field }}
-                                            {% for error in field.errors %}
-                                                <p class="text-xs text-red-500 mt-1">{{ error }}</p>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
 
-                            <div class="mt-3 flex justify-end">
-                                <button type="button"
-                                    class="remove-item text-sm text-red-500 hover:text-red-700">
-                                    Удалить товар
-                                </button>
+                                            {{ field }}
+
+                                            {% for error in field.errors %}
+                                                <p class="text-xs text-red-500 mt-1">
+                                                    {{ error }}
+                                                </p>
+                                            {% endfor %}
+
+                                        </div>
+
+                                    {% endif %}
+
+                                {% endfor %}
+
                             </div>
 
                             {{ item.DELETE.as_hidden }}
+
+                            <div class="flex justify-end mt-4">
+
+                                <button type="button"
+                                        class="remove-item text-sm font-semibold text-red-500 hover:text-red-700">
+                                    Удалить товар
+                                </button>
+
+                            </div>
+
                         </div>
+
                     {% endfor %}
+
                 </div>
 
-                {% if item_formset.non_form_errors %}
-                    <div class="text-sm text-red-500 mt-3">
-                        {{ item_formset.non_form_errors }}
-                    </div>
-                {% endif %}
             </div>
 
-            <div class="flex flex-col sm:flex-row gap-3 pt-5 border-t">
+            <!-- Buttons -->
+            <div class="border-t border-slate-200 mt-8 pt-6 flex flex-col sm:flex-row gap-3">
+
                 <button type="submit"
-                    class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 px-6 rounded-xl">
+                        class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 rounded-xl">
                     ✓ Создать заказ
                 </button>
 
                 <a href="{% url 'order_list' %}"
-                   class="flex-1 text-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3.5 px-6 rounded-xl">
+                   class="flex-1 text-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3.5 rounded-xl">
                     Отмена
                 </a>
+
             </div>
+
         </form>
+
     </div>
 
     <p class="text-center text-xs text-slate-400 mt-6">
         Smart Stock · Управление складом
     </p>
+
 </div>
 
-<!-- Шаблон новой строки -->
+
+<!-- Empty form template -->
 <template id="empty-item">
+
     <div class="item-row bg-slate-50 border border-slate-200 rounded-2xl p-4">
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
             {% for field in item_formset.empty_form.visible_fields %}
+
                 {% if field.name != 'DELETE' %}
+
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-2">
+
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">
                             {{ field.label }}
                         </label>
+
                         {{ field }}
+
                     </div>
+
                 {% endif %}
+
             {% endfor %}
+
         </div>
-        <div class="mt-3 flex justify-end">
-            <button type="button" class="remove-item text-sm text-red-500">
+
+        <div class="flex justify-end mt-4">
+
+            <button type="button"
+                    class="remove-item text-sm font-semibold text-red-500 hover:text-red-700">
                 Удалить товар
             </button>
+
         </div>
+
     </div>
+
 </template>
 
+
 <script>
+
     const addButton = document.getElementById('add-item');
     const container = document.getElementById('items-container');
+
     const totalForms = document.getElementById('id_items-TOTAL_FORMS');
+
     const template = document.getElementById('empty-item').innerHTML;
 
+
+    // Add product row
     addButton.addEventListener('click', function () {
+
         let newForm = template.replace(/__prefix__/g, totalForms.value);
+
         container.insertAdjacentHTML('beforeend', newForm);
+
         totalForms.value = parseInt(totalForms.value) + 1;
+
     });
 
+
+    // Remove product row
     container.addEventListener('click', function (event) {
+
         if (event.target.classList.contains('remove-item')) {
+
             const row = event.target.closest('.item-row');
+
             const deleteInput = row.querySelector('input[name$="-DELETE"]');
 
             if (deleteInput) {
+
                 deleteInput.checked = true;
                 row.style.display = 'none';
+
             } else {
+
                 row.remove();
+
             }
+
         }
+
     });
+
 </script>
 
+
 <style>
-    input, select, textarea {
+
+    input,
+    select,
+    textarea {
         width: 100%;
         padding: 12px;
         border: 1px solid #e2e8f0;
@@ -191,7 +291,9 @@
         outline: none;
     }
 
-    input:focus, select:focus, textarea:focus {
+    input:focus,
+    select:focus,
+    textarea:focus {
         border-color: #6366f1;
         box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
     }
@@ -200,6 +302,11 @@
         min-height: 100px;
         resize: vertical;
     }
+
+    select {
+        cursor: pointer;
+    }
+
 </style>
 
 </body>

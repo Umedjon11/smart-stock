@@ -6,6 +6,7 @@ from .forms import SupplierForm, SupplyOrderForm, SupplyOrderStatusForm
 from django.urls import reverse_lazy, reverse
 from django.forms import inlineformset_factory
 from django.db import transaction
+from products.models import Product
 
 
 SupplyOrderItemFormSet = inlineformset_factory(
@@ -81,14 +82,25 @@ class CreateSupplyOrderView(LoginRequiredMixin, UserPassesTestMixin, CreateView)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['item_formset'] = kwargs.get(
+
+        item_formset = kwargs.get(
             'item_formset', SupplyOrderItemFormSet()
         )
+
+        for item_form in item_formset:
+            item_form.fields['product'].queryset = Product.objects.filter(is_active=True)
+
+        print(Product.objects.filter(is_active=True).values_list('name', flat=True))
+
+        context['item_formset'] = item_formset
         return context
 
     def post(self, request, *args, **kwargs):
         form = self.get_form()
         item_formset = SupplyOrderItemFormSet(request.POST)
+
+        for item_form in item_formset:
+            item_form.fields['product'].queryset = Product.objects.filter(is_active=True)
 
         if form.is_valid() and item_formset.is_valid():
             with transaction.atomic():
