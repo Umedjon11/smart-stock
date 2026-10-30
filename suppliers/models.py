@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from products.models import Product
 
 
 class Supplier(models.Model):
@@ -37,7 +38,7 @@ class SupplyOrder(models.Model):
 
 class SupplyOrderItem(models.Model):
     order = models.ForeignKey(SupplyOrder, on_delete=models.CASCADE, related_name='items')
-    product_name = models.CharField(max_length=200)
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, null=True, blank=True)
     quantity = models.PositiveIntegerField()
     unit_price = models.DecimalField(max_digits=10, decimal_places=2)
     updated_at = models.DateTimeField(auto_now=True)
