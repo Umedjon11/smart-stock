@@ -1,41 +1,274 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Категории товаров — SmartStock</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-error-container": "#93000a",
+                        "secondary-fixed": "#d8e2ff",
+                        "primary": "#004ac6",
+                        "surface-bright": "#f8f9ff",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#00174b",
+                        "outline-variant": "#c3c6d7",
+                        "inverse-on-surface": "#eaf1ff",
+                        "tertiary": "#005a82",
+                        "on-error": "#ffffff",
+                        "surface-container-high": "#dce9ff",
+                        "surface-dim": "#cbdbf5",
+                        "surface": "#f8f9ff",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#213145",
+                        "surface-tint": "#0053db",
+                        "secondary-container": "#2170e4",
+                        "inverse-primary": "#b4c5ff",
+                        "on-primary-container": "#eeefff",
+                        "tertiary-fixed": "#c9e6ff",
+                        "tertiary-fixed-dim": "#89ceff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-secondary-fixed-variant": "#004395",
+                        "on-secondary": "#ffffff",
+                        "background": "#f8f9ff",
+                        "surface-container-low": "#eff4ff",
+                        "error": "#ba1a1a",
+                        "outline": "#737686",
+                        "primary-container": "#2563eb",
+                        "on-tertiary-fixed-variant": "#004c6e",
+                        "on-surface": "#0b1c30",
+                        "surface-variant": "#d3e4fe",
+                        "on-secondary-fixed": "#001a42",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "on-tertiary-container": "#e4f2ff",
+                        "secondary": "#0058be",
+                        "on-tertiary-fixed": "#001e2f",
+                        "surface-container-highest": "#d3e4fe",
+                        "tertiary-container": "#0074a6",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#0b1c30",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-surface-variant": "#434655",
+                        "on-secondary-container": "#fefcff",
+                        "surface-container": "#e5eeff",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "space-xs": "0.25rem",
+                        "margin-sm": "1rem",
+                        "space-lg": "1.5rem",
+                        "space-xl": "2.5rem",
+                        "space-sm": "0.5rem",
+                        "margin": "2rem",
+                        "gutter": "1.5rem",
+                        "space-md": "1rem",
+                        "gutter-sm": "1rem"
+                    },
+                    fontFamily: {
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "code-num": ["Inter"],
+                        "headline-xl": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    fontSize: {
+                        "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "code-num": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+                        "headline-xl": ["36px", { "lineHeight": "44px", "fontWeight": "600" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        @layer base {
+            html, body { margin: 0; padding: 0; }
+            body { overscroll-behavior: none; }
+            main > :first-child { margin-top: 0 !important; }
+            main > :last-child { margin-bottom: 0 !important; }
+        }
+        ::-webkit-scrollbar { display: none; }
+    </style>
 </head>
-<body class="bg-light">
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'products:product_list' %}">📦 SmartStock</a>
-            <div class="d-flex gap-3">
-                <a href="{% url 'products:product_list' %}" class="btn btn-outline-light btn-sm">Каталог товаров</a>
-                <a href="{% url 'products:category_create' %}" class="btn btn-primary btn-sm">+ Новая категория</a>
+<body class="bg-surface font-body-md text-on-surface antialiased">
+    <aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.03)] z-50 flex flex-col justify-between p-space-lg">
+        <div class="flex flex-col gap-space-lg">
+            <a href="{% url 'products:product_list' %}" class="flex items-center gap-space-sm px-space-xs">
+                <div class="w-9 h-9 rounded-lg bg-primary-container text-on-primary flex items-center justify-center shadow-sm">
+                    <span class="material-symbols-outlined text-[20px]">inventory_2</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">SmartStock</span>
+                    <span class="font-label-sm text-label-sm text-tertiary font-medium">Складской учет</span>
+                </div>
+            </a>
+            <nav class="flex flex-col gap-space-xs">
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="{% url 'products:product_list' %}">
+                    <span class="material-symbols-outlined text-[20px]">package_2</span>
+                    <span class="font-label-lg text-label-lg">Товары и остатки</span>
+                </a>
+                <a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-colors bg-primary-container text-on-primary-container font-headline-sm rounded-lg shadow-sm" href="{% url 'products:category_list' %}">
+                    <span class="material-symbols-outlined text-[20px]">category</span>
+                    <span class="font-label-lg text-label-lg">Категории</span>
+                </a>
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="{% url 'products:product_create' %}">
+                    <span class="material-symbols-outlined text-[20px]">add_box</span>
+                    <span class="font-label-lg text-label-lg">Добавить товар</span>
+                </a>
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="{% url 'warehouses:warehouse_list' %}">
+                    <span class="material-symbols-outlined text-[20px]">warehouse</span>
+                    <span class="font-label-lg text-label-lg">Склады</span>
+                </a>
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="{% url 'products:category_create' %}">
+                    <span class="material-symbols-outlined text-[20px]">create_new_folder</span>
+                    <span class="font-label-lg text-label-lg">Новая категория</span>
+                </a>
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="{% url 'transfer_list' %}">
+                    <span class="material-symbols-outlined text-[20px]">sync_alt</span>
+                    <span class="font-label-lg text-label-lg">Перемещения</span>
+                </a>
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="{% url 'movement_list' %}">
+                    <span class="material-symbols-outlined text-[20px]">history</span>
+                    <span class="font-label-lg text-label-lg">История перемещений</span>
+                </a>
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="{% url 'receipt_list' %}">
+                    <span class="material-symbols-outlined text-[20px]">download</span>
+                    <span class="font-label-lg text-label-lg">Поступления</span>
+                </a>
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="{% url 'writeoff_list' %}">
+                    <span class="material-symbols-outlined text-[20px]">upload</span>
+                    <span class="font-label-lg text-label-lg">Списания</span>
+                </a>
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="/admin/">
+                    <span class="material-symbols-outlined text-[20px]">settings</span>
+                    <span class="font-label-lg text-label-lg">Админ-панель</span>
+                </a>
+            </nav>
+        </div>
+        <div class="flex flex-col gap-space-md pt-space-md">
+            <div class="bg-surface-container-low rounded-lg p-space-md flex flex-col gap-space-xs">
+                <div class="flex items-center justify-between">
+                    <span class="font-label-sm text-label-sm text-on-surface-variant">Всего категорий</span>
+                    <span class="font-code-num text-code-num text-on-surface font-semibold">{{ categories.count|default:categories|length }}</span>
+                </div>
+                <div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+                    <div class="h-full bg-primary rounded-full" style="width: 100%;"></div>
+                </div>
+                <span class="font-label-sm text-label-sm text-on-surface-variant">Каталог структурирован</span>
             </div>
+            <a href="{% url 'products:category_create' %}" class="w-full h-10 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container-high flex items-center justify-center gap-space-sm font-label-lg text-label-lg transition-colors">
+                <span class="material-symbols-outlined text-[18px]">add</span>
+                <span>Новая категория</span>
+            </a>
         </div>
-    </nav>
+    </aside>
+    <div class="pl-72">
+        <header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] z-40 flex items-center justify-between px-gutter">
+            <div class="flex items-center gap-space-md flex-1 max-w-xl">
+                <span class="text-sm text-gray-500 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">folder_open</span> Каталог &gt; <strong class="text-on-surface">Категории</strong>
+                </span>
+            </div>
+            <div class="flex items-center gap-space-lg">
+                <div class="flex items-center gap-space-sm pl-space-xs">
+                    <div class="flex flex-col text-right">
+                        <span class="font-label-md text-label-md text-on-surface font-semibold leading-tight">
+                            {{ request.user.username|default:"Администратор" }}
+                        </span>
+                        <span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">Менеджер склада</span>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary">
+                        <span class="material-symbols-outlined text-[18px]">person</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main class="w-full pt-24 px-gutter bg-surface min-h-screen">
+            <div class="max-w-4xl mx-auto pb-16">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-lg">
+                    <div class="flex flex-col">
+                        <div class="flex items-center gap-space-xs text-primary font-label-md text-label-md font-medium mb-1">
+                            <span class="material-symbols-outlined text-[16px]">category</span>
+                            <span>Структура номенклатуры</span>
+                        </div>
+                        <h1 class="font-headline-xl text-headline-xl text-on-surface font-semibold tracking-tight">Категории товаров</h1>
+                        <p class="font-body-md text-body-md text-on-surface-variant mt-1">Классификация и группировка товаров в системе SmartStock.</p>
+                    </div>
+                    <div class="flex items-center gap-space-sm">
+                        <a href="{% url 'products:product_list' %}" class="px-space-md py-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg shadow-sm flex items-center gap-space-xs transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">package_2</span>
+                            <span>Каталог товаров</span>
+                        </a>
+                        <a href="{% url 'products:category_create' %}" class="px-space-lg py-2.5 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg shadow-sm flex items-center gap-space-xs transition-all">
+                            <span class="material-symbols-outlined text-[18px]">add</span>
+                            <span>Новая категория</span>
+                        </a>
+                    </div>
+                </div>
 
-    <div class="container my-5" style="max-width: 800px;">
-        <h1 class="h3 fw-bold mb-4">Категории товаров</h1>
-
-        <div class="card shadow-sm border-0 rounded-4 p-4 bg-white">
-            <ul class="list-group list-group-flush">
-                {% for category in categories %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center py-3">
-                        <span class="fw-semibold fs-5">{{ category.name }}</span>
-                        <span class="badge bg-secondary rounded-pill">ID: {{ category.pk }}</span>
-                    </li>
-                {% empty %}
-                    <li class="list-group-item text-center py-4 text-muted">
-                        Категорий пока нет. Создайте первую через кнопку выше!
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+                <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden border border-surface-container-high/40">
+                    <div class="px-space-lg py-4 border-b border-surface-container-high/40 bg-surface-container-low/60">
+                        <h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary">list</span> Список категорий
+                        </h3>
+                    </div>
+                    <div class="divide-y divide-surface-container-high/40">
+                        {% for category in categories %}
+                            <div class="px-space-lg py-4 flex items-center justify-between hover:bg-surface-container-low/50 transition-colors">
+                                <span class="font-headline-sm text-headline-sm text-on-surface font-medium">{{ category.name }}</span>
+                                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-surface-container-high text-on-surface-variant font-code-num">ID: {{ category.pk }}</span>
+                            </div>
+                        {% empty %}
+                            <div class="py-16 text-center">
+                                <div class="flex flex-col items-center justify-center">
+                                    <div class="w-12 h-12 rounded-full bg-surface-container-low flex items-center justify-center text-outline mb-space-sm">
+                                        <span class="material-symbols-outlined text-[24px]">category</span>
+                                    </div>
+                                    <h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Категорий пока нет</h3>
+                                    <p class="font-body-md text-body-md text-on-surface-variant max-w-sm mb-space-md">Создайте первую категорию через кнопку выше!</p>
+                                    <a href="{% url 'products:category_create' %}" class="px-space-md py-1.5 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md">
+                                        + Новая категория
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="px-space-lg py-space-md bg-surface-container-lowest flex items-center justify-between border-t border-surface-container-high/40">
+                        <span class="font-label-md text-label-md text-on-surface-variant">Всего категорий: <span class="font-medium text-on-surface">{{ categories.count|default:categories|length }}</span></span>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-
 </body>
 </html>
