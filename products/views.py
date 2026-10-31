@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 from .models import Product,Category
-
+from django import forms
 
 class ProductList(ListView):
     model = Product
@@ -64,7 +64,7 @@ class CategoryListView(ListView):
 
 class CategoryCreateView(LoginRequiredMixin, CreateView):
     model = Category
-    fields = ['name']  
+    fields = ['name']
     template_name = 'nozim/category_form.html'
     success_url = reverse_lazy('products:category_list')
     login_url = '/admin/login/'
