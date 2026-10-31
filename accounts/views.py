@@ -180,5 +180,4 @@ class DeleteEmployeeView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         user = self.request.user
         return (user.is_superuser or (hasattr(user, 'employee_profile')
-                        and user.employee_profile.position == 'manager'))
-    
+                        and user.employee_profile.position == 'manager'))  
