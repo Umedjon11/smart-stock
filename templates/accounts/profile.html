@@ -1,70 +1,274 @@
 
-{% extends 'base.html' %}
-{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой профиль | SmartStock</title>
 
-{% block content %}
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
 
-<div class="profile-page">
+<body class="min-h-screen bg-slate-50 text-slate-800 antialiased">
 
-    <div class="profile-card">
+<div class="min-h-screen px-4 py-10 sm:px-6 lg:py-14">
 
-        <div class="profile-top">
-            {% if profile.photo %}
-                <img class="profile-photo"
-                     src="{{ profile.photo.url }}"
-                     alt="{{ profile.user.username }}">
-            {% else %}
-                <div class="profile-no-photo">
-                    {{ profile.user.username|first|upper }}
+    <div class="mx-auto max-w-4xl">
+
+        <!-- Back Button -->
+        <a href="{% url 'employee_list' %}"
+           class="mb-7 inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700">
+
+            <span class="text-lg transition-transform group-hover:-translate-x-1">←</span>
+            Назад к сотрудникам
+        </a>
+
+        <!-- Profile Card -->
+        <div class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/60">
+
+            <!-- Top Gradient -->
+            <div class="h-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600"></div>
+
+            <!-- Profile Header -->
+            <div class="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-50 px-6 py-10 sm:px-10">
+
+                <div class="relative flex flex-col items-center gap-5 text-center sm:flex-row sm:items-center sm:gap-7 sm:text-left">
+
+                    <!-- Avatar -->
+                    <div class="shrink-0">
+                        {% if profile.photo %}
+                            <img
+                                src="{{ profile.photo.url }}"
+                                alt="{{ profile.user.username }}"
+                                class="h-28 w-28 rounded-3xl border-4 border-white object-cover shadow-xl ring-1 ring-slate-200"
+                            >
+                        {% else %}
+                            <div class="flex h-28 w-28 items-center justify-center rounded-3xl border-4 border-white bg-gradient-to-br from-blue-600 to-indigo-700 text-5xl font-black uppercase text-white shadow-xl shadow-blue-600/20">
+                                {{ profile.user.username|first|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- User Info -->
+                    <div class="min-w-0 flex-1">
+
+                        <p class="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-blue-600">
+                            SmartStock · Личный кабинет
+                        </p>
+
+                        <h1 class="break-words text-3xl font-black tracking-tight text-slate-900">
+                            {{ profile.user.username }}
+                        </h1>
+
+                        <div class="mt-4 flex flex-wrap items-center justify-center gap-3 sm:justify-start">
+
+                            <span class="inline-flex items-center gap-2 rounded-full bg-blue-100 px-4 py-2 text-sm font-bold text-blue-700">
+                                <span class="h-2 w-2 rounded-full bg-blue-600"></span>
+                                {{ profile.get_position_display }}
+                            </span>
+
+                            <span class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-500">
+                                <span>📅</span>
+                                Сотрудник SmartStock
+                            </span>
+
+                        </div>
+
+                    </div>
+
                 </div>
-            {% endif %}
 
-            <h1>{{ profile.user.username }}</h1>
-
-            <span class="profile-position">
-                {{ profile.get_position_display }}
-            </span>
-        </div>
-
-        <div class="profile-divider"></div>
-
-        <h2>Личная информация</h2>
-
-        <div class="profile-details">
-
-            <div class="profile-detail">
-                <span>👤 Username</span>
-                <strong>{{ profile.user.username }}</strong>
             </div>
 
-            <div class="profile-detail">
-                <span>✉ Email</span>
-                <strong>{{ profile.user.email|default:"Не указан" }}</strong>
+            <!-- Details Section -->
+            <div class="px-6 py-8 sm:px-10 sm:py-10">
+
+                <div class="mb-7">
+                    <h2 class="text-xl font-extrabold text-slate-900">
+                        Личная информация
+                    </h2>
+
+                    <p class="mt-2 text-sm text-slate-500">
+                        Основные данные и контактная информация
+                    </p>
+                </div>
+
+                <!-- Information Grid -->
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                    <!-- Username -->
+                    <div class="group rounded-2xl border border-slate-200 bg-slate-50/70 p-5 transition duration-200 hover:border-blue-200 hover:bg-blue-50/50">
+                        <div class="flex items-start gap-4">
+
+                            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-xl">
+                                👤
+                            </div>
+
+                            <div class="min-w-0 flex-1">
+                                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                                    Username
+                                </p>
+
+                                <p class="mt-2 break-words text-sm font-bold text-slate-800">
+                                    {{ profile.user.username }}
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="group rounded-2xl border border-slate-200 bg-slate-50/70 p-5 transition duration-200 hover:border-blue-200 hover:bg-blue-50/50">
+                        <div class="flex items-start gap-4">
+
+                            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-100 text-xl">
+                                ✉️
+                            </div>
+
+                            <div class="min-w-0 flex-1">
+                                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                                    Email
+                                </p>
+
+                                <p class="mt-2 break-words text-sm font-bold text-slate-800">
+                                    {{ profile.user.email|default:"Не указан" }}
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="group rounded-2xl border border-slate-200 bg-slate-50/70 p-5 transition duration-200 hover:border-emerald-200 hover:bg-emerald-50/50">
+                        <div class="flex items-start gap-4">
+
+                            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-xl">
+                                ☎️
+                            </div>
+
+                            <div class="min-w-0 flex-1">
+                                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                                    Телефон
+                                </p>
+
+                                <p class="mt-2 break-words text-sm font-bold text-slate-800">
+                                    {{ profile.phone|default:"Не указан" }}
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Position -->
+                    <div class="group rounded-2xl border border-slate-200 bg-slate-50/70 p-5 transition duration-200 hover:border-violet-200 hover:bg-violet-50/50">
+                        <div class="flex items-start gap-4">
+
+                            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-violet-100 text-xl">
+                                💼
+                            </div>
+
+                            <div class="min-w-0 flex-1">
+                                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                                    Должность
+                                </p>
+
+                                <p class="mt-2 break-words text-sm font-bold text-slate-800">
+                                    {{ profile.get_position_display }}
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="group rounded-2xl border border-slate-200 bg-slate-50/70 p-5 transition duration-200 hover:border-amber-200 hover:bg-amber-50/50">
+                        <div class="flex items-start gap-4">
+
+                            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-xl">
+                                📍
+                            </div>
+
+                            <div class="min-w-0 flex-1">
+                                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                                    Адрес
+                                </p>
+
+                                <p class="mt-2 break-words text-sm font-bold text-slate-800">
+                                    {{ profile.address|default:"Не указан" }}
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Birth Date -->
+                    <div class="group rounded-2xl border border-slate-200 bg-slate-50/70 p-5 transition duration-200 hover:border-pink-200 hover:bg-pink-50/50">
+                        <div class="flex items-start gap-4">
+
+                            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-pink-100 text-xl">
+                                🎂
+                            </div>
+
+                            <div class="min-w-0 flex-1">
+                                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                                    Дата рождения
+                                </p>
+
+                                <p class="mt-2 break-words text-sm font-bold text-slate-800">
+                                    {{ profile.birth_date|date:"d.m.Y"|default:"Не указана" }}
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Registration Date -->
+                    <div class="group rounded-2xl border border-slate-200 bg-slate-50/70 p-5 transition duration-200 hover:border-cyan-200 hover:bg-cyan-50/50 sm:col-span-2">
+                        <div class="flex items-start gap-4">
+
+                            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cyan-100 text-xl">
+                                📅
+                            </div>
+
+                            <div class="min-w-0 flex-1">
+                                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                                    Дата регистрации
+                                </p>
+
+                                <p class="mt-2 break-words text-sm font-bold text-slate-800">
+                                    {{ profile.created_at|date:"d.m.Y"|default:"Не указана" }}
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Footer Note -->
+                <div class="mt-8 flex items-center gap-3 rounded-2xl border border-blue-100 bg-blue-50/70 p-4">
+                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-lg shadow-sm">
+                        🔐
+                    </div>
+
+                    <div>
+                        <p class="text-sm font-bold text-slate-800">
+                            Ваш профиль SmartStock
+                        </p>
+
+                        <p class="mt-1 text-xs leading-5 text-slate-500">
+                            Здесь отображаются ваши личные и рабочие данные.
+                        </p>
+                    </div>
+                </div>
+
             </div>
 
-            <div class="profile-detail">
-                <span>☎ Телефон</span>
-                <strong>{{ profile.phone|default:"Не указан" }}</strong>
-            </div>
-
-            <div class="profile-detail">
-                <span>💼 Должность</span>
-                <strong>{{ profile.get_position_display }}</strong>
-            </div>
-
-            <div class="profile-detail">
-                <span>📍 Адрес</span>
-                <strong>{{ profile.address|default:"Не указан" }}</strong>
-            </div>
-
-            <div class="profile-detail">
-                <span>🎂 Дата рождения</span>
-                <strong>{{ profile.birth_date|date:"d.m.Y"|default:"Не указана" }}</strong>
-            </div>
-
-            <div class="profile-detail">
-                <span>📅 Дата регистрации</span>
-                <strong>{{ profile.created_at|date:"d.m.Y" }}</strong>
+            <!-- Card Footer -->
+            <div class="border-t border-slate-100 bg-slate-50 px-6 py-4 text-center sm:px-10">
+                <p class="text-xs font-medium text-slate-400">
+                    © SmartStock · Система управления складом
+                </p>
             </div>
 
         </div>
@@ -73,4 +277,5 @@
 
 </div>
 
-{% endblock %}
+</body>
+</html>

@@ -24,4 +24,4 @@ class SupplyOrderStatusForm(forms.ModelForm):
 class SupplyOrderItemForm(forms.ModelForm):
     class Meta:
         model = SupplyOrderItem
-        fields = ['product_name', 'quantity', 'unit_price']
+        fields = ['product', 'quantity', 'unit_price']

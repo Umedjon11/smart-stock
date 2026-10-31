@@ -1,51 +1,218 @@
 
-{% extends 'base.html' %}
-{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Создать сотрудника | SmartStock</title>
+</head>
 
-{% block content %}
-<div class="employee-create-page">
-    <div class="employee-create-card">
+<body class="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 text-slate-800">
 
-        <div class="employee-create-header">
-            <div class="employee-create-icon">＋</div>
-            <div>
-                <h2>Создать сотрудника</h2>
-                <p>Добавьте нового сотрудника в систему Smart Stock</p>
-            </div>
-        </div>
+    <main class="flex min-h-screen items-center justify-center px-4 py-10 sm:px-6">
 
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
+        <section class="w-full max-w-4xl overflow-hidden rounded-3xl border border-white/80 bg-white shadow-2xl shadow-blue-900/10">
 
-            {% if form.errors %}
-                <div class="employee-form-errors">
-                    Пожалуйста, проверьте правильность заполнения полей.
-                    {{ form.errors }}
-                </div>
-            {% endif %}
+            <!-- Top accent -->
+            <div class="h-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600"></div>
 
-            <div class="employee-form-grid">
-                {% for field in form %}
-                    <div class="employee-form-field">
-                        <label for="{{ field.id_for_label }}">
-                            {{ field.label }}
-                            {% if field.field.required %}<span>*</span>{% endif %}
-                        </label>
+            <div class="p-6 sm:p-10">
 
-                        {{ field }}
-
-                        {% if field.help_text %}
-                            <small>{{ field.help_text }}</small>
-                        {% endif %}
+                <!-- Header -->
+                <header class="mb-9 flex items-center gap-4">
+                    <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-blue-600 text-3xl font-light text-white shadow-lg shadow-blue-600/25">
+                        +
                     </div>
-                {% endfor %}
+
+                    <div>
+                        <p class="mb-1 text-xs font-bold uppercase tracking-[0.2em] text-blue-600">
+                            SmartStock · Управление
+                        </p>
+
+                        <h1 class="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
+                            Создать сотрудника
+                        </h1>
+
+                        <p class="mt-2 text-sm leading-6 text-slate-500">
+                            Заполните данные нового сотрудника для добавления в систему.
+                        </p>
+                    </div>
+                </header>
+
+                <!-- Form -->
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% if form.errors %}
+                        <div class="mb-7 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                            <div class="flex items-start gap-3">
+                                <span class="text-lg">!</span>
+                                <div>
+                                    <p class="font-bold">
+                                        Не удалось создать сотрудника
+                                    </p>
+                                    <p class="mt-1">
+                                        Проверьте поля и исправьте ошибки ниже.
+                                    </p>
+                                    <div class="mt-3">
+                                        {{ form.non_field_errors }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <div class="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2">
+
+                        {% for field in form %}
+                            <div class="group min-w-0">
+
+                                <label for="{{ field.id_for_label }}"
+                                       class="mb-2 block text-sm font-semibold text-slate-700 transition group-focus-within:text-blue-700">
+                                    {{ field.label }}
+                                    {% if field.field.required %}
+                                        <span class="text-red-500">*</span>
+                                    {% endif %}
+                                </label>
+
+                                {{ field }}
+
+                                {% if field.help_text %}
+                                    <p class="mt-2 text-xs leading-5 text-slate-400">
+                                        {{ field.help_text }}
+                                    </p>
+                                {% endif %}
+
+                                {% for error in field.errors %}
+                                    <p class="mt-2 flex items-start gap-1 text-xs font-medium text-red-600">
+                                        <span>!</span>
+                                        <span>{{ error }}</span>
+                                    </p>
+                                {% endfor %}
+
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="mt-10 flex flex-col-reverse gap-4 border-t border-slate-100 pt-7 sm:flex-row sm:items-center sm:justify-between">
+
+                        <p class="text-xs leading-5 text-slate-400">
+                            <span class="text-red-500">*</span>
+                            Поля, обязательные для заполнения
+                        </p>
+
+                        <button type="submit"
+                                class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-600/25 focus:outline-none focus:ring-4 focus:ring-blue-200 active:translate-y-0 sm:w-auto">
+
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 width="20" height="20"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <path d="M12 5v14"/>
+                                <path d="M5 12h14"/>
+                            </svg>
+
+                            Создать сотрудника
+                        </button>
+
+                    </div>
+                </form>
+
             </div>
 
-            <button type="submit" class="employee-create-button">
-                ＋ Создать сотрудника
-            </button>
-        </form>
+            <!-- Bottom note -->
+            <footer class="border-t border-slate-100 bg-slate-50/80 px-6 py-4 text-center text-xs text-slate-400">
+                SmartStock · Система управления складом
+            </footer>
 
-    </div>
-</div>
-{% endblock %}
+        </section>
+
+    </main>
+
+    <!-- Style Django form fields -->
+    <style>
+        input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+        select,
+        textarea {
+            display: block;
+            width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+            border: 1px solid #dbe3ef;
+            border-radius: 12px;
+            background-color: #f8fafc;
+            padding: 12px 14px;
+            color: #1e293b;
+            font-size: 14px;
+            line-height: 1.5;
+            outline: none;
+            transition: border-color .2s, background-color .2s, box-shadow .2s;
+        }
+
+        input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):hover,
+        select:hover,
+        textarea:hover {
+            border-color: #b8c8e0;
+        }
+
+        input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):focus,
+        select:focus,
+        textarea:focus {
+            border-color: #2563eb;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgb(37 99 235 / 10%);
+        }
+
+        input[type="file"] {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px dashed #bfcee3;
+            border-radius: 12px;
+            background: #f8fafc;
+            padding: 10px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        input[type="file"]::file-selector-button {
+            margin-right: 12px;
+            border: 0;
+            border-radius: 8px;
+            background: #e7efff;
+            padding: 8px 12px;
+            color: #1d4ed8;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            accent-color: #2563eb;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        @media (max-width: 640px) {
+            main {
+                align-items: flex-start;
+            }
+        }
+    </style>
+
+</body>
+</html>

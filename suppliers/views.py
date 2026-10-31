@@ -4,7 +4,16 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 from .forms import SupplierForm, SupplyOrderForm, SupplyOrderStatusForm
 from django.urls import reverse_lazy, reverse
+from django.forms import inlineformset_factory
+from django.db import transaction
+from products.models import Product
 
+
+SupplyOrderItemFormSet = inlineformset_factory(
+    SupplyOrder, SupplyOrderItem,
+    fields=['product', 'quantity', 'unit_price'],
+    extra=1, min_num=1, validate_min=True, can_delete=True
+)
 
 
 class SupplierListView(LoginRequiredMixin, ListView):
@@ -71,10 +80,41 @@ class CreateSupplyOrderView(LoginRequiredMixin, UserPassesTestMixin, CreateView)
         return (user.is_superuser or (hasattr(user, 'employee_profile') 
                         and user.employee_profile.position == 'manager'))
 
-    def form_valid(self, form):
-        form.instance.created_by = self.request.user
-        return super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
+        item_formset = kwargs.get(
+            'item_formset', SupplyOrderItemFormSet()
+        )
+
+        for item_form in item_formset:
+            item_form.fields['product'].queryset = Product.objects.filter(is_active=True)
+
+        print(Product.objects.filter(is_active=True).values_list('name', flat=True))
+
+        context['item_formset'] = item_formset
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        item_formset = SupplyOrderItemFormSet(request.POST)
+
+        for item_form in item_formset:
+            item_form.fields['product'].queryset = Product.objects.filter(is_active=True)
+
+        if form.is_valid() and item_formset.is_valid():
+            with transaction.atomic():
+                order = form.save(commit=False)
+                order.created_by = request.user
+                order.save()
+
+                item_formset.instance = order
+                item_formset.save()
+
+            return redirect(self.success_url)
+        return self.render_to_response(self.get_context_data(form=form, item_formset=item_formset))
+
+    
 
 class SupplyOrderDetailView(LoginRequiredMixin, DetailView):
     model = SupplyOrder
