@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    
+
+<div class="min-h-screen bg-slate-50 p-4 md:p-8">
+
+    <!-- HEADER -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+        <div>
+            <p class="text-sm font-semibold text-blue-600 mb-2">SMART STOCK / REPORTS</p>
+            <h1 class="text-3xl font-bold text-slate-800">Отчёт по движениям</h1>
+            <p class="text-slate-500 mt-2">История движения товаров на складах</p>
+        </div>
+
+        <div class="flex gap-3">
+            <a href="{% url 'dashboard' %}"
+               class="px-5 py-3 rounded-xl bg-white border border-slate-200 text-slate-600 font-semibold hover:bg-slate-100 transition">
+                ← Назад
+            </a>
+
+            <button onclick="window.print()"
+                    class="px-5 py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition shadow-lg shadow-blue-200">
+                🖨 Печать
+            </button>
+        </div>
+    </div>
+
+    <!-- STATISTICS -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 mb-8">
+
+        <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm hover:shadow-md transition">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-sm text-slate-500">Приход товаров</p>
+                    <h2 class="text-3xl font-bold text-emerald-600 mt-3">
+                        {{ receipts_count }}
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-2">Позиций прихода</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center text-2xl">
+                    📥
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm hover:shadow-md transition">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-sm text-slate-500">Списание товаров</p>
+                    <h2 class="text-3xl font-bold text-red-600 mt-3">
+                        {{ writeoffs_count }}
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-2">Позиций списания</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center text-2xl">
+                    📤
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm hover:shadow-md transition">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-sm text-slate-500">Перемещение</p>
+                    <h2 class="text-3xl font-bold text-blue-600 mt-3">
+                        {{ transfers_count }}
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-2">Позиций перемещения</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-2xl">
+                    🔄
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- RECEIPTS -->
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mb-8">
+
+        <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+            <div>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-xl">📥</div>
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800">Приход товаров</h2>
+                        <p class="text-sm text-slate-500">Товары, поступившие на склад</p>
+                    </div>
+                </div>
+            </div>
+            <span class="px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-sm font-semibold">
+                {{ receipts_count }}
+            </span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
+                    <tr>
+                        <th class="px-6 py-4">#</th>
+                        <th class="px-6 py-4">Номер документа</th>
+                        <th class="px-6 py-4">Товар</th>
+                        <th class="px-6 py-4">Склад</th>
+                        <th class="px-6 py-4">Количество</th>
+                        <th class="px-6 py-4">Дата</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for item in receipts %}
+                    <tr class="hover:bg-emerald-50/40 transition">
+                        <td class="px-6 py-4 text-sm text-slate-400">{{ forloop.counter }}</td>
+                        <td class="px-6 py-4 text-sm font-semibold text-slate-700">{{ item.receipt.number }}</td>
+                        <td class="px-6 py-4 text-sm font-medium text-slate-800">{{ item.product.name }}</td>
+                        <td class="px-6 py-4 text-sm text-slate-600">{{ item.receipt.warehouse.name }}</td>
+                        <td class="px-6 py-4">
+                            <span class="font-bold text-emerald-600">+{{ item.quantity }}</span>
+                            <span class="text-xs text-slate-400">{{ item.product.unit.short_name }}</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-slate-500">{{ item.receipt.created_at|date:"d.m.Y H:i" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="px-6 py-10 text-center text-slate-400">
+                            Приходов пока нет
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- WRITEOFFS -->
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mb-8">
+
+        <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center text-xl">📤</div>
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800">Списание товаров</h2>
+                    <p class="text-sm text-slate-500">Товары, списанные со склада</p>
+                </div>
+            </div>
+            <span class="px-3 py-1.5 rounded-full bg-red-50 text-red-700 text-sm font-semibold">
+                {{ writeoffs_count }}
+            </span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
+                    <tr>
+                        <th class="px-6 py-4">#</th>
+                        <th class="px-6 py-4">Номер документа</th>
+                        <th class="px-6 py-4">Товар</th>
+                        <th class="px-6 py-4">Склад</th>
+                        <th class="px-6 py-4">Количество</th>
+                        <th class="px-6 py-4">Дата</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for item in writeoffs %}
+                    <tr class="hover:bg-red-50/40 transition">
+                        <td class="px-6 py-4 text-sm text-slate-400">{{ forloop.counter }}</td>
+                        <td class="px-6 py-4 text-sm font-semibold text-slate-700">{{ item.writeoff.number }}</td>
+                        <td class="px-6 py-4 text-sm font-medium text-slate-800">{{ item.product.name }}</td>
+                        <td class="px-6 py-4 text-sm text-slate-600">{{ item.writeoff.warehouse.name }}</td>
+                        <td class="px-6 py-4">
+                            <span class="font-bold text-red-600">-{{ item.quantity }}</span>
+                            <span class="text-xs text-slate-400">{{ item.product.unit.short_name }}</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-slate-500">{{ item.writeoff.created_at|date:"d.m.Y H:i" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="px-6 py-10 text-center text-slate-400">
+                            Списаний пока нет
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TRANSFERS -->
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+
+        <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-xl">🔄</div>
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800">Перемещение товаров</h2>
+                    <p class="text-sm text-slate-500">Товары, оформленные на перемещение</p>
+                </div>
+            </div>
+            <span class="px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 text-sm font-semibold">
+                {{ transfers_count }}
+            </span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
+                    <tr>
+                        <th class="px-6 py-4">#</th>
+                        <th class="px-6 py-4">Номер документа</th>
+                        <th class="px-6 py-4">Товар</th>
+                        <th class="px-6 py-4">Склад</th>
+                        <th class="px-6 py-4">Количество</th>
+                        <th class="px-6 py-4">Дата</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for item in transfers %}
+                    <tr class="hover:bg-blue-50/40 transition">
+                        <td class="px-6 py-4 text-sm text-slate-400">{{ forloop.counter }}</td>
+                        <td class="px-6 py-4 text-sm font-semibold text-slate-700">{{ item.writeoff.number }}</td>
+                        <td class="px-6 py-4 text-sm font-medium text-slate-800">{{ item.product.name }}</td>
+                        <td class="px-6 py-4 text-sm text-slate-600">{{ item.writeoff.warehouse.name }}</td>
+                        <td class="px-6 py-4">
+                            <span class="font-bold text-blue-600">{{ item.quantity }}</span>
+                            <span class="text-xs text-slate-400">{{ item.product.unit.short_name }}</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-slate-500">{{ item.writeoff.created_at|date:"d.m.Y H:i" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="px-6 py-10 text-center text-slate-400">
+                            Перемещений пока нет
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center text-xs text-slate-400 mt-8">
+        SMART STOCK · Отчёт по движениям товаров
+    </div>
+
+</div>
+
+<style>
+    @media print {
+        body {
+            background: white !important;
+        }
+
+        button, a {
+            display: none !important;
+        }
+
+        .min-h-screen {
+            padding: 0 !important;
+        }
+
+        .shadow-sm {
+            box-shadow: none !important;
+        }
+    }
+</style>
+
+
+
+</body>
+</html>

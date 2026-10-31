@@ -1,177 +1,379 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Детали движения №{{ movement.id }} — SmartStock</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-error-container": "#93000a",
+                        "secondary-fixed": "#d8e2ff",
+                        "primary": "#004ac6",
+                        "surface-bright": "#f8f9ff",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#00174b",
+                        "outline-variant": "#c3c6d7",
+                        "inverse-on-surface": "#eaf1ff",
+                        "tertiary": "#005a82",
+                        "on-error": "#ffffff",
+                        "surface-container-high": "#dce9ff",
+                        "surface-dim": "#cbdbf5",
+                        "surface": "#f8f9ff",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#213145",
+                        "surface-tint": "#0053db",
+                        "secondary-container": "#2170e4",
+                        "inverse-primary": "#b4c5ff",
+                        "on-primary-container": "#eeefff",
+                        "tertiary-fixed": "#c9e6ff",
+                        "tertiary-fixed-dim": "#89ceff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-secondary-fixed-variant": "#004395",
+                        "on-secondary": "#ffffff",
+                        "background": "#f8f9ff",
+                        "surface-container-low": "#eff4ff",
+                        "error": "#ba1a1a",
+                        "outline": "#737686",
+                        "primary-container": "#2563eb",
+                        "on-tertiary-fixed-variant": "#004c6e",
+                        "on-surface": "#0b1c30",
+                        "surface-variant": "#d3e4fe",
+                        "on-secondary-fixed": "#001a42",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "on-tertiary-container": "#e4f2ff",
+                        "secondary": "#0058be",
+                        "on-tertiary-fixed": "#001e2f",
+                        "surface-container-highest": "#d3e4fe",
+                        "tertiary-container": "#0074a6",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#0b1c30",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-surface-variant": "#434655",
+                        "on-secondary-container": "#fefcff",
+                        "surface-container": "#e5eeff",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "space-xs": "0.25rem",
+                        "margin-sm": "1rem",
+                        "space-lg": "1.5rem",
+                        "space-xl": "2.5rem",
+                        "space-sm": "0.5rem",
+                        "margin": "2rem",
+                        "gutter": "1.5rem",
+                        "space-md": "1rem",
+                        "gutter-sm": "1rem"
+                    },
+                    fontFamily: {
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "code-num": ["Inter"],
+                        "headline-xl": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    fontSize: {
+                        "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "code-num": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+                        "headline-xl": ["36px", { "lineHeight": "44px", "fontWeight": "600" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        @layer base {
+            html, body { margin: 0; padding: 0; }
+            body { overscroll-behavior: none; }
+            main > :first-child { margin-top: 0 !important; }
+            main > :last-child { margin-bottom: 0 !important; }
+        }
+        ::-webkit-scrollbar { display: none; }
+    </style>
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans antialiased">
-    <div class="min-h-screen flex flex-col">
-        <header class="bg-white shadow-sm border-b border-gray-200">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <span class="text-2xl">📦</span>
-                    <h1 class="text-xl font-bold text-gray-800">SmartStock <span class="text-sm font-normal text-gray-500">| Управление складом</span></h1>
+<body class="bg-surface font-body-md text-on-surface antialiased">
+    <aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.03)] z-50 flex flex-col justify-between p-space-lg">
+        <div class="flex flex-col gap-space-lg">
+            <a href="{% url 'products:product_list' %}" class="flex items-center gap-space-sm px-space-xs">
+                <div class="w-9 h-9 rounded-lg bg-primary-container text-on-primary flex items-center justify-center shadow-sm">
+                    <span class="material-symbols-outlined text-[20px]">inventory_2</span>
                 </div>
-                <div class="flex items-center gap-4">
-                    <span class="text-sm text-gray-600">Пользователь: <strong class="text-gray-800">{{ request.user.username|default:"Гость" }}</strong></span>
+                <div class="flex flex-col">
+                    <span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">SmartStock</span>
+                    <span class="font-label-sm text-label-sm text-tertiary font-medium">Складской учет</span>
+                </div>
+            </a>
+            <nav class="flex flex-col gap-space-xs">
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="{% url 'products:product_list' %}">
+                    <span class="material-symbols-outlined text-[20px]">package_2</span>
+                    <span class="font-label-lg text-label-lg">Товары и остатки</span>
+                </a>
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="{% url 'products:category_list' %}">
+                    <span class="material-symbols-outlined text-[20px]">category</span>
+                    <span class="font-label-lg text-label-lg">Категории</span>
+                </a>
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="{% url 'products:product_create' %}">
+                    <span class="material-symbols-outlined text-[20px]">add_box</span>
+                    <span class="font-label-lg text-label-lg">Добавить товар</span>
+                </a>
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="{% url 'warehouses:warehouse_list' %}">
+                    <span class="material-symbols-outlined text-[20px]">warehouse</span>
+                    <span class="font-label-lg text-label-lg">Склады</span>
+                </a>
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="{% url 'products:category_create' %}">
+                    <span class="material-symbols-outlined text-[20px]">create_new_folder</span>
+                    <span class="font-label-lg text-label-lg">Новая категория</span>
+                </a>
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="{% url 'transfer_list' %}">
+                    <span class="material-symbols-outlined text-[20px]">sync_alt</span>
+                    <span class="font-label-lg text-label-lg">Перемещения</span>
+                </a>
+                <a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-colors bg-primary-container text-on-primary-container font-headline-sm rounded-lg shadow-sm" href="{% url 'movement_list' %}">
+                    <span class="material-symbols-outlined text-[20px]">history</span>
+                    <span class="font-label-lg text-label-lg">История перемещений</span>
+                </a>
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="{% url 'receipt_list' %}">
+                    <span class="material-symbols-outlined text-[20px]">download</span>
+                    <span class="font-label-lg text-label-lg">Поступления</span>
+                </a>
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="{% url 'writeoff_list' %}">
+                    <span class="material-symbols-outlined text-[20px]">upload</span>
+                    <span class="font-label-lg text-label-lg">Списания</span>
+                </a>
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="/admin/">
+                    <span class="material-symbols-outlined text-[20px]">settings</span>
+                    <span class="font-label-lg text-label-lg">Админ-панель</span>
+                </a>
+            </nav>
+        </div>
+        <div class="flex flex-col gap-space-md pt-space-md">
+            <div class="bg-surface-container-low rounded-lg p-space-md flex flex-col gap-space-xs">
+                <span class="font-label-sm text-label-sm text-on-surface-variant">Операция №{{ movement.id }}</span>
+                <span class="font-headline-sm text-headline-sm text-primary font-semibold">Детали движения</span>
+            </div>
+            <a href="{% url 'movement_list' %}" class="w-full h-10 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container-high flex items-center justify-center gap-space-sm font-label-lg text-label-lg transition-colors">
+                <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                <span>К списку</span>
+            </a>
+        </div>
+    </aside>
+    <div class="pl-72">
+        <header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] z-40 flex items-center justify-between px-gutter">
+            <div class="flex items-center gap-space-md flex-1 max-w-xl">
+                <span class="text-sm text-gray-500 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">folder_open</span> История движений &gt; <strong class="text-on-surface">Операция #{{ movement.id }}</strong>
+                </span>
+            </div>
+            <div class="flex items-center gap-space-lg">
+                <div class="flex items-center gap-space-sm pl-space-xs">
+                    <div class="flex flex-col text-right">
+                        <span class="font-label-md text-label-md text-on-surface font-semibold leading-tight">
+                            {{ request.user.username|default:"Администратор" }}
+                        </span>
+                        <span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">Менеджер склада</span>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary">
+                        <span class="material-symbols-outlined text-[18px]">person</span>
+                    </div>
                 </div>
             </div>
         </header>
-
-        <main class="flex-grow max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="mb-6 flex items-center justify-between">
-                <div>
-                    <h2 class="text-2xl font-bold text-gray-900">Детали движения запасов #{{ movement.id }}</h2>
-                    <p class="text-sm text-gray-500">Информация об операции, позициях и связанном документе.</p>
-                </div>
-                <a href="{% url 'movement_list' %}" class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800 bg-white border border-gray-300 px-4 py-2 rounded-lg shadow-sm transition-colors">
-                    &larr; Назад к списку
-                </a>
-            </div>
-
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
-                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-                    <h3 class="text-lg font-medium text-gray-800">Основные параметры</h3>
-                    <div>
-                        {% if movement.type == 'in' %}
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">Приход</span>
-                        {% elif movement.type == 'out' %}
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">Уход (Списание)</span>
-                        {% elif movement.type == 'trans_in' %}
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">Перемещение (приход)</span>
-                        {% elif movement.type == 'trans_out' %}
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">Перемещение (уход)</span>
-                        {% endif %}
+        <main class="w-full pt-24 px-gutter bg-surface min-h-screen">
+            <div class="max-w-4xl mx-auto pb-16">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-lg">
+                    <div class="flex flex-col">
+                        <div class="flex items-center gap-space-xs text-primary font-label-md text-label-md font-medium mb-1">
+                            <span class="material-symbols-outlined text-[16px]">history</span>
+                            <span>Аудит складской операции</span>
+                        </div>
+                        <h1 class="font-headline-xl text-headline-xl text-on-surface font-semibold tracking-tight">Детали движения запасов #{{ movement.id }}</h1>
+                        <p class="font-body-md text-body-md text-on-surface-variant mt-1">Информация об операции, позициях и связанном документе.</p>
                     </div>
+                    <a href="{% url 'movement_list' %}" class="px-space-md py-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg shadow-sm flex items-center gap-space-xs transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                        <span>Назад к списку</span>
+                    </a>
                 </div>
 
-                <div class="px-6 py-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <span class="block text-xs font-medium text-gray-400 uppercase tracking-wider">ID операции</span>
-                        <span class="mt-1 text-base font-semibold text-gray-900">#{{ movement.id }}</span>
-                    </div>
-                    <div>
-                        <span class="block text-xs font-medium text-gray-400 uppercase tracking-wider">Дата и время создания</span>
-                        <span class="mt-1 text-base font-medium text-gray-900">{{ movement.created_at|date:"d.m.Y H:i" }}</span>
-                    </div>
-                    <div>
-                        <span class="block text-xs font-medium text-gray-400 uppercase tracking-wider">Тип движения</span>
-                        <span class="mt-1 text-base font-medium text-gray-900">{{ movement.get_type_display }}</span>
-                    </div>
-                    <div>
-                        <span class="block text-xs font-medium text-gray-400 uppercase tracking-wider">Связанный документ</span>
-                        <span class="mt-1 text-base font-medium text-gray-900">
-                            {% if movement.receipt %}
-                                <span class="text-blue-600">Поступление №{{ movement.receipt.number }}</span>
-                            {% elif movement.write_off %}
-                                <span class="text-blue-600">Списание №{{ movement.write_off.number }}</span>
-                            {% elif movement.transfer %}
-                                <span class="text-blue-600">Перемещение №{{ movement.transfer.pk }}</span>
-                            {% else %}
-                                <span class="text-gray-400">Прямая операция</span>
+                <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden mb-space-lg border border-surface-container-high/40">
+                    <div class="px-space-lg py-4 border-b border-surface-container-high/40 bg-surface-container-low/60 flex justify-between items-center">
+                        <h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary">info</span> Основные параметры
+                        </h3>
+                        <div>
+                            {% if movement.type == 'in' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Приход
+                                </span>
+                            {% elif movement.type == 'out' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-800">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span> Уход (Списание)
+                                </span>
+                            {% elif movement.type == 'trans_in' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> Перемещение (приход)
+                                </span>
+                            {% elif movement.type == 'trans_out' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span> Перемещение (уход)
+                                </span>
                             {% endif %}
-                        </span>
+                        </div>
+                    </div>
+                    <div class="p-space-lg grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <span class="block font-label-sm text-label-sm text-outline uppercase tracking-wider">ID операции</span>
+                            <span class="mt-1 font-headline-sm text-headline-sm text-on-surface font-semibold">#{{ movement.id }}</span>
+                        </div>
+                        <div>
+                            <span class="block font-label-sm text-label-sm text-outline uppercase tracking-wider">Дата и время создания</span>
+                            <span class="mt-1 font-body-lg text-body-lg text-on-surface font-code-num">{{ movement.created_at|date:"d.m.Y H:i" }}</span>
+                        </div>
+                        <div>
+                            <span class="block font-label-sm text-label-sm text-outline uppercase tracking-wider">Тип движения</span>
+                            <span class="mt-1 font-body-lg text-body-lg text-on-surface font-medium">{{ movement.get_type_display }}</span>
+                        </div>
+                        <div>
+                            <span class="block font-label-sm text-label-sm text-outline uppercase tracking-wider">Связанный документ</span>
+                            <span class="mt-1 font-body-lg text-body-lg text-on-surface font-medium">
+                                {% if movement.receipt %}
+                                    <span class="text-primary">Поступление №{{ movement.receipt.number }}</span>
+                                {% elif movement.write_off %}
+                                    <span class="text-primary">Списание №{{ movement.write_off.number }}</span>
+                                {% elif movement.transfer %}
+                                    <span class="text-primary">Перемещение №{{ movement.transfer.pk }}</span>
+                                {% else %}
+                                    <span class="text-outline">Прямая операция</span>
+                                {% endif %}
+                            </span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Блок со списком товаров из связанного документа -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
-                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                    <h3 class="text-lg font-medium text-gray-800">Товары в операции</h3>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Товар</th>
-                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Количество</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            {% if movement.receipt %}
-                                {% for item in movement.receipt.rec_items.all %}
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {{ item.product.name }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-700 font-semibold">
-                                        +{{ item.quantity }}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            {% elif movement.write_off %}
-                                {% for item in movement.write_off.off_items.all %}
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {{ item.product.name }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-red-600 font-semibold">
-                                        -{{ item.quantity }}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            {% elif movement.transfer and movement.transfer.items %}
-                                {% for item in movement.transfer.items.all %}
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {{ item.product.name }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-700 font-semibold">
-                                        {{ item.quantity }}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            {% else %}
-                                <tr>
-                                    <td colspan="2" class="px-6 py-6 text-center text-gray-400 text-sm">
-                                        Информация о товарах недоступна
-                                    </td>
-                                </tr>
-                            {% endif %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                    <h3 class="text-lg font-medium text-gray-800">Склад и ответственный сотрудник</h3>
-                </div>
-                <div class="px-6 py-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <span class="block text-xs font-medium text-gray-400 uppercase tracking-wider">Склад</span>
-                        <span class="mt-1 text-base font-semibold text-gray-900">
-                            {% if movement.receipt %}
-                                {{ movement.receipt.warehouse.name }}
-                            {% elif movement.write_off %}
-                                {{ movement.write_off.warehouse.name }}
-                            {% else %}
-                                <span class="text-gray-400">Не применим / Между складами</span>
-                            {% endif %}
-                        </span>
+                <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden mb-space-lg border border-surface-container-high/40">
+                    <div class="px-space-lg py-4 border-b border-surface-container-high/40 bg-surface-container-low/60">
+                        <h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary">inventory_2</span> Товары в операции
+                        </h3>
                     </div>
-                    <div>
-                        <span class="block text-xs font-medium text-gray-400 uppercase tracking-wider">Пользователь (Автор)</span>
-                        <span class="mt-1 text-base font-medium text-gray-900">
-                            {% if movement.receipt %}
-                                {{ movement.receipt.user.username }}
-                            {% elif movement.write_off %}
-                                {{ movement.write_off.user.username }}
-                            {% else %}
-                                <span class="text-gray-400">—</span>
-                            {% endif %}
-                        </span>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-surface-container-low/40 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider select-none">
+                                    <th class="py-3.5 px-space-lg font-semibold">Товар</th>
+                                    <th class="py-3.5 px-space-lg font-semibold text-right">Количество</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-surface-container-high/40 text-body-md font-body-md text-on-surface">
+                                {% if movement.receipt %}
+                                    {% for item in movement.receipt.rec_items.all %}
+                                    <tr class="hover:bg-surface-container-low/50 transition-colors">
+                                        <td class="py-4 px-space-lg font-medium text-on-surface">
+                                            {{ item.product.name }}
+                                        </td>
+                                        <td class="py-4 px-space-lg text-right font-code-num text-code-num font-semibold text-emerald-600">
+                                            +{{ item.quantity }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% elif movement.write_off %}
+                                    {% for item in movement.write_off.off_items.all %}
+                                    <tr class="hover:bg-surface-container-low/50 transition-colors">
+                                        <td class="py-4 px-space-lg font-medium text-on-surface">
+                                            {{ item.product.name }}
+                                        </td>
+                                        <td class="py-4 px-space-lg text-right font-code-num text-code-num font-semibold text-rose-600">
+                                            -{{ item.quantity }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% elif movement.transfer and movement.transfer.items %}
+                                    {% for item in movement.transfer.items.all %}
+                                    <tr class="hover:bg-surface-container-low/50 transition-colors">
+                                        <td class="py-4 px-space-lg font-medium text-on-surface">
+                                            {{ item.product.name }}
+                                        </td>
+                                        <td class="py-4 px-space-lg text-right font-code-num text-code-num font-semibold text-primary">
+                                            {{ item.quantity }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="2" class="py-12 text-center text-outline">
+                                            Информация о товарах недоступна
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden border border-surface-container-high/40">
+                    <div class="px-space-lg py-4 border-b border-surface-container-high/40 bg-surface-container-low/60">
+                        <h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary">badge</span> Склад и ответственный сотрудник
+                        </h3>
+                    </div>
+                    <div class="p-space-lg grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <span class="block font-label-sm text-label-sm text-outline uppercase tracking-wider">Склад</span>
+                            <span class="mt-1 font-body-lg text-body-lg text-on-surface font-semibold">
+                                {% if movement.receipt %}
+                                    {{ movement.receipt.warehouse.name }}
+                                {% elif movement.write_off %}
+                                    {{ movement.write_off.warehouse.name }}
+                                {% else %}
+                                    <span class="text-outline">Не применим / Между складами</span>
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div>
+                            <span class="block font-label-sm text-label-sm text-outline uppercase tracking-wider">Пользователь (Автор)</span>
+                            <span class="mt-1 font-body-lg text-body-lg text-on-surface">
+                                {% if movement.receipt %}
+                                    {{ movement.receipt.user.username }}
+                                {% elif movement.write_off %}
+                                    {{ movement.write_off.user.username }}
+                                {% else %}
+                                    <span class="text-outline">—</span>
+                                {% endif %}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
-
-        <footer class="bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-500">
-            SmartStock &copy; 2026 — Система складского учёта
-        </footer>
     </div>
 </body>
 </html>

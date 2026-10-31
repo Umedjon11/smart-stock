@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    
+<div class="min-h-screen bg-slate-50 p-4 md:p-8">
+
+    <!-- PAGE HEADER -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+        <div>
+            <p class="text-sm font-semibold text-blue-600 mb-2">SMART STOCK / REPORTS</p>
+            <h1 class="text-3xl font-bold text-slate-800">Отчёт по остаткам</h1>
+            <p class="text-slate-500 mt-2">Контроль количества товаров на складах</p>
+        </div>
+
+        <div class="flex gap-3">
+            <a href="{% url 'dashboard' %}"
+               class="px-5 py-3 rounded-xl bg-white border border-slate-200 text-slate-600 font-semibold hover:bg-slate-100 transition">
+                ← Назад
+            </a>
+
+            <button onclick="window.print()"
+                    class="px-5 py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition shadow-lg shadow-blue-200">
+                🖨 Печать
+            </button>
+        </div>
+    </div>
+
+    <!-- STATISTICS -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 mb-8">
+
+        <!-- Total -->
+        <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm hover:shadow-md transition">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-sm font-medium text-slate-500">Всего позиций</p>
+                    <h2 class="text-3xl font-bold text-slate-800 mt-3">
+                        {{ total_positions }}
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-2">Товаров на складах</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-2xl">
+                    📦
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty -->
+        <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm hover:shadow-md transition">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-sm font-medium text-slate-500">Нет в наличии</p>
+                    <h2 class="text-3xl font-bold text-red-600 mt-3">
+                        {{ empty_count }}
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-2">Нулевой остаток</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center text-2xl">
+                    ⚠️
+                </div>
+            </div>
+        </div>
+
+        <!-- Low -->
+        <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm hover:shadow-md transition">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-sm font-medium text-slate-500">Низкий остаток</p>
+                    <h2 class="text-3xl font-bold text-amber-600 mt-3">
+                        {{ low_count }}
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-2">Ниже минимального уровня</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-2xl">
+                    📉
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- STOCK TABLE -->
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+
+        <div class="p-6 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div>
+                <h2 class="text-xl font-bold text-slate-800">Складские остатки</h2>
+                <p class="text-sm text-slate-500 mt-1">Подробная информация о товарах и складах</p>
+            </div>
+
+            <input type="text"
+                   id="stockSearch"
+                   placeholder="Поиск товара или склада..."
+                   class="w-full lg:w-80 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition">
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-slate-50">
+                    <tr class="text-xs uppercase tracking-wider text-slate-500">
+                        <th class="px-6 py-4 font-semibold">#</th>
+                        <th class="px-6 py-4 font-semibold">Товар</th>
+                        <th class="px-6 py-4 font-semibold">Склад</th>
+                        <th class="px-6 py-4 font-semibold">Количество</th>
+                        <th class="px-6 py-4 font-semibold">Мин. остаток</th>
+                        <th class="px-6 py-4 font-semibold">Статус</th>
+                    </tr>
+                </thead>
+
+                <tbody id="stockTable" class="divide-y divide-slate-100">
+
+                    {% for item in stock_data %}
+                    <tr class="stock-row hover:bg-blue-50/50 transition">
+
+                        <td class="px-6 py-5 text-sm text-slate-400">
+                            {{ forloop.counter }}
+                        </td>
+
+                        <td class="px-6 py-5">
+                            <p class="font-semibold text-slate-800">
+                                {{ item.product.name }}
+                            </p>
+                            <p class="text-xs text-slate-400 mt-1">
+                                SKU: {{ item.product.sku }}
+                            </p>
+                        </td>
+
+                        <td class="px-6 py-5">
+                            <div class="flex items-center gap-2 text-sm text-slate-600">
+                                <span class="text-lg">🏢</span>
+                                {{ item.warehouse.name }}
+                            </div>
+                        </td>
+
+                        <td class="px-6 py-5">
+                            <span class="text-base font-bold text-slate-800">
+                                {{ item.quantity }}
+                            </span>
+                            <span class="text-xs text-slate-400">
+                                {{ item.product.unit.short_name }}
+                            </span>
+                        </td>
+
+                        <td class="px-6 py-5 text-sm text-slate-600">
+                            {{ item.product.min_stock_level }}
+                        </td>
+
+                        <td class="px-6 py-5">
+                            {% if item.quantity == 0 %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 text-red-600 text-xs font-semibold">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                    Нет в наличии
+                                </span>
+
+                            {% elif item.quantity <= item.product.min_stock_level %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 text-xs font-semibold">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                    Мало
+                                </span>
+
+                            {% else %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                    В норме
+                                </span>
+                            {% endif %}
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="px-6 py-16 text-center">
+                            <div class="text-5xl mb-4">📦</div>
+                            <h3 class="text-lg font-bold text-slate-700">
+                                Нет данных об остатках
+                            </h3>
+                            <p class="text-sm text-slate-400 mt-2">
+                                На складах пока нет товаров.
+                            </p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="px-6 py-4 border-t border-slate-100 flex justify-between items-center">
+            <p class="text-xs text-slate-400">SMART STOCK · Складской отчёт</p>
+            <p class="text-sm font-medium text-slate-500">
+                Позиций: {{ total_positions }}
+            </p>
+        </div>
+
+    </div>
+</div>
+
+<!-- SEARCH -->
+<script>
+    const searchInput = document.getElementById('stockSearch');
+    const stockRows = document.querySelectorAll('.stock-row');
+
+    searchInput.addEventListener('input', function () {
+        const searchValue = this.value.toLowerCase().trim();
+
+        stockRows.forEach(row => {
+            const rowText = row.innerText.toLowerCase();
+            row.style.display = rowText.includes(searchValue) ? '' : 'none';
+        });
+    });
+</script>
+
+<style>
+    @media print {
+        body {
+            background: white !important;
+        }
+
+        button, a, #stockSearch {
+            display: none !important;
+        }
+
+        .min-h-screen {
+            padding: 0 !important;
+        }
+
+        .shadow-sm {
+            box-shadow: none !important;
+        }
+    }
+</style>
+
+
+</body>
+</html>
