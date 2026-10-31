@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+
+
+<div class="min-h-screen bg-slate-50 p-4 md:p-8">
+
+    <!-- HEADER -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+        <div>
+            <p class="text-sm font-semibold text-amber-600 mb-2">SMART STOCK / REPORTS</p>
+            <h1 class="text-3xl font-bold text-slate-800">Низкие остатки</h1>
+            <p class="text-slate-500 mt-2">Контроль товаров, требующих пополнения</p>
+        </div>
+
+        <div class="flex gap-3">
+            <a href="{% url 'dashboard' %}"
+               class="px-5 py-3 rounded-xl bg-white border border-slate-200 text-slate-600 font-semibold hover:bg-slate-100 transition">
+                ← Назад
+            </a>
+
+            <button onclick="window.print()"
+                    class="px-5 py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition shadow-lg shadow-blue-200">
+                🖨 Печать
+            </button>
+        </div>
+    </div>
+
+    <!-- STATISTIC -->
+    <div class="bg-white rounded-2xl border border-amber-100 p-6 shadow-sm mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-slate-500">Товары с низким остатком</p>
+                <h2 class="text-4xl font-bold text-amber-600 mt-3">
+                    {{ low_count }}
+                </h2>
+                <p class="text-sm text-slate-400 mt-2">
+                    Требуют пополнения на складе
+                </p>
+            </div>
+
+            <div class="w-16 h-16 rounded-2xl bg-amber-50 flex items-center justify-center text-3xl">
+                ⚠️
+            </div>
+        </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+
+        <div class="p-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+                <h2 class="text-xl font-bold text-slate-800">Список товаров</h2>
+                <p class="text-sm text-slate-500 mt-1">
+                    Товары, остаток которых достиг минимального уровня
+                </p>
+            </div>
+
+            <input type="text"
+                   id="lowStockSearch"
+                   placeholder="Поиск товара или склада..."
+                   class="w-full md:w-80 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 outline-none focus:bg-white focus:ring-2 focus:ring-amber-400 transition">
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
+                    <tr>
+                        <th class="px-6 py-4">#</th>
+                        <th class="px-6 py-4">Товар</th>
+                        <th class="px-6 py-4">Склад</th>
+                        <th class="px-6 py-4">Остаток</th>
+                        <th class="px-6 py-4">Минимум</th>
+                        <th class="px-6 py-4">Необходимо</th>
+                        <th class="px-6 py-4">Статус</th>
+                    </tr>
+                </thead>
+
+                <tbody id="lowStockTable" class="divide-y divide-slate-100">
+
+                    {% for item in low_stocks %}
+                    <tr class="low-stock-row hover:bg-amber-50/40 transition">
+
+                        <td class="px-6 py-5 text-sm text-slate-400">
+                            {{ forloop.counter }}
+                        </td>
+
+                        <td class="px-6 py-5">
+                            <p class="font-semibold text-slate-800">
+                                {{ item.product.name }}
+                            </p>
+                            <p class="text-xs text-slate-400 mt-1">
+                                SKU: {{ item.product.sku }}
+                            </p>
+                        </td>
+
+                        <td class="px-6 py-5 text-sm text-slate-600">
+                            🏢 {{ item.warehouse.name }}
+                        </td>
+
+                        <td class="px-6 py-5">
+                            <span class="font-bold text-red-600">
+                                {{ item.quantity }}
+                            </span>
+                            <span class="text-xs text-slate-400">
+                                {{ item.product.unit.short_name }}
+                            </span>
+                        </td>
+
+                        <td class="px-6 py-5 text-sm font-medium text-slate-700">
+                            {{ item.product.min_stock_level }}
+                        </td>
+
+                        <td class="px-6 py-5">
+                            <span class="font-bold text-blue-600">
+                                {{ item.product.min_stock_level|add:"-"|add:item.quantity }}
+                            </span>
+                            <span class="text-xs text-slate-400">
+                                {{ item.product.unit.short_name }}
+                            </span>
+                        </td>
+
+                        <td class="px-6 py-5">
+                            <span class="inline-flex px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 text-xs font-semibold">
+                                ⚠ Мало
+                            </span>
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="px-6 py-16 text-center">
+                            <div class="text-5xl mb-4">✅</div>
+                            <h3 class="text-lg font-bold text-slate-700">
+                                Все товары в норме
+                            </h3>
+                            <p class="text-sm text-slate-400 mt-2">
+                                Нет товаров, требующих пополнения.
+                            </p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="px-6 py-4 border-t border-slate-100 flex justify-between items-center">
+            <p class="text-xs text-slate-400">SMART STOCK · Low Stock Report</p>
+            <p class="text-sm font-medium text-slate-500">
+                Всего: {{ low_count }}
+            </p>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const searchInput = document.getElementById('lowStockSearch');
+    const rows = document.querySelectorAll('.low-stock-row');
+
+    searchInput.addEventListener('input', function () {
+        const value = this.value.toLowerCase().trim();
+
+        rows.forEach(row => {
+            row.style.display = row.innerText.toLowerCase().includes(value)
+                ? ''
+                : 'none';
+        });
+    });
+</script>
+
+<style>
+    @media print {
+        button, a, input {
+            display: none !important;
+        }
+
+        body {
+            background: white !important;
+        }
+
+        .min-h-screen {
+            padding: 0 !important;
+        }
+
+        .shadow-sm {
+            box-shadow: none !important;
+        }
+    }
+</style>
+
+
+</body>
+</html>
