@@ -1,25 +1,353 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-
 <body>
-    <h1>Аналитика SmartStock</h1>
+    
 
-    <div>
-        <h3>Всего товаров</h3>
-        <p>{{ products_count }}</p>
-    </div>
+<div class="min-h-screen bg-slate-100 p-4 md:p-8">
 
-    <div>
-        <h3>Всего заказов</h3>
-        <p>{{ orders_count }}</p>
-    </div>
+    <!-- HEADER -->
+    <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-9">
+
+        <div>
+            <p class="text-sm font-semibold text-blue-600 mb-2">
+                SMART STOCK / DASHBOARD
+            </p>
+
+            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900">
+                Аналитика SmartStock
+            </h1>
+
+            <p class="text-slate-500 mt-2">
+                Общая статистика и аналитика склада
+            </p>
+        </div>
+
+        <div class="bg-white px-5 py-3 rounded-xl shadow-sm border border-slate-200">
+            <p class="text-sm font-semibold text-slate-700">
+                📊 Панель аналитики
+            </p>
+            <p class="text-xs text-slate-400 mt-1">
+                Warehouse Management System
+            </p>
+        </div>
+
+    </header>
+
+
+    <!-- WELCOME BANNER -->
+    <section class="bg-gradient-to-r from-slate-900 to-blue-900 rounded-2xl p-6 md:p-8 mb-8 text-white shadow-lg">
+
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+
+            <div>
+                <p class="text-blue-300 text-sm font-semibold mb-2">
+                    SMART STOCK ANALYTICS
+                </p>
+
+                <h2 class="text-2xl md:text-3xl font-bold">
+                    Добро пожаловать в аналитику!
+                </h2>
+
+                <p class="text-slate-300 mt-3 max-w-xl text-sm leading-6">
+                    Здесь вы можете отслеживать товары, поступления,
+                    списания, перемещения и состояние складских запасов.
+                </p>
+            </div>
+
+            <div class="hidden md:flex w-20 h-20 rounded-2xl bg-white/10 items-center justify-center text-5xl">
+                📊
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- STATISTICS -->
+    <section class="mb-10">
+
+        <div class="mb-5">
+            <h2 class="text-xl font-bold text-slate-900">
+                Общая статистика
+            </h2>
+
+            <p class="text-sm text-slate-500 mt-1">
+                Основные показатели складской системы
+            </p>
+        </div>
+
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+
+            <!-- PRODUCTS -->
+            <div class="bg-gradient-to-br from-blue-100 to-blue-50 border border-blue-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+                
+                <div class="flex justify-between items-center">
+
+                    <div class="w-12 h-12 bg-blue-600 text-white rounded-xl flex items-center justify-center text-2xl">
+                        📦
+                    </div>
+
+                    <span class="text-xs font-bold text-blue-700 bg-blue-200 px-3 py-1 rounded-full">
+                        Товары
+                    </span>
+
+                </div>
+
+                <p class="text-slate-500 mt-5 text-sm">
+                    Всего товаров
+                </p>
+
+                <h2 class="text-4xl font-extrabold text-slate-900 mt-1">
+                    {{ products_count }}
+                </h2>
+
+            </div>
+
+
+            <!-- RECEIPTS -->
+            <div class="bg-gradient-to-br from-emerald-100 to-emerald-50 border border-emerald-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+
+                <div class="flex justify-between items-center">
+
+                    <div class="w-12 h-12 bg-emerald-500 text-white rounded-xl flex items-center justify-center text-2xl">
+                        📥
+                    </div>
+
+                    <span class="text-xs font-bold text-emerald-700 bg-emerald-200 px-3 py-1 rounded-full">
+                        Приход
+                    </span>
+
+                </div>
+
+                <p class="text-slate-500 mt-5 text-sm">
+                    Всего поступлений
+                </p>
+
+                <h2 class="text-4xl font-extrabold text-slate-900 mt-1">
+                    {{ receipts_count }}
+                </h2>
+
+            </div>
+
+
+            <!-- WRITEOFFS -->
+            <div class="bg-gradient-to-br from-orange-100 to-orange-50 border border-orange-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+
+                <div class="flex justify-between items-center">
+
+                    <div class="w-12 h-12 bg-orange-500 text-white rounded-xl flex items-center justify-center text-2xl">
+                        📤
+                    </div>
+
+                    <span class="text-xs font-bold text-orange-700 bg-orange-200 px-3 py-1 rounded-full">
+                        Расход
+                    </span>
+
+                </div>
+
+                <p class="text-slate-500 mt-5 text-sm">
+                    Всего списаний
+                </p>
+
+                <h2 class="text-4xl font-extrabold text-slate-900 mt-1">
+                    {{ writeoffs_count }}
+                </h2>
+
+            </div>
+
+
+            <!-- TRANSFERS -->
+            <div class="bg-gradient-to-br from-purple-100 to-purple-50 border border-purple-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+
+                <div class="flex justify-between items-center">
+
+                    <div class="w-12 h-12 bg-purple-500 text-white rounded-xl flex items-center justify-center text-2xl">
+                        🔄
+                    </div>
+
+                    <span class="text-xs font-bold text-purple-700 bg-purple-200 px-3 py-1 rounded-full">
+                        Перемещение
+                    </span>
+
+                </div>
+
+                <p class="text-slate-500 mt-5 text-sm">
+                    Всего перемещений
+                </p>
+
+                <h2 class="text-4xl font-extrabold text-slate-900 mt-1">
+                    {{ transfers_count }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- REPORTS -->
+    <section class="mb-10">
+
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+
+            <div>
+                <h2 class="text-xl font-bold text-slate-900">
+                    📊 Складские отчёты
+                </h2>
+
+                <p class="text-sm text-slate-500 mt-1">
+                    Просмотр и анализ складских операций
+                </p>
+            </div>
+
+            <span class="text-xs font-semibold text-blue-600 bg-blue-50 px-4 py-2 rounded-full">
+                3 вида отчётов
+            </span>
+
+        </div>
+
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+
+            <!-- STOCK REPORT -->
+            <a href="{% url 'stock_report' %}"
+               class="group bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:border-blue-300 transition duration-300">
+
+                <div class="flex items-center justify-between">
+
+                    <div class="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-3xl group-hover:bg-blue-100 transition">
+                        📦
+                    </div>
+
+                    <span class="text-blue-600 text-xl group-hover:translate-x-1 transition">
+                        →
+                    </span>
+
+                </div>
+
+                <h3 class="font-bold text-slate-800 text-lg mt-5">
+                    Текущие остатки
+                </h3>
+
+                <p class="text-sm text-slate-500 mt-2 leading-6">
+                    Информация о количестве товаров на каждом складе.
+                </p>
+
+                <p class="text-sm font-semibold text-blue-600 mt-5">
+                    Открыть отчёт →
+                </p>
+
+            </a>
+
+
+            <!-- MOVEMENT REPORT -->
+            <a href="{% url 'movement_report' %}"
+               class="group bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:border-emerald-300 transition duration-300">
+
+                <div class="flex items-center justify-between">
+
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-3xl group-hover:bg-emerald-100 transition">
+                        🔄
+                    </div>
+
+                    <span class="text-emerald-600 text-xl group-hover:translate-x-1 transition">
+                        →
+                    </span>
+
+                </div>
+
+                <h3 class="font-bold text-slate-800 text-lg mt-5">
+                    Отчёт по движениям
+                </h3>
+
+                <p class="text-sm text-slate-500 mt-2 leading-6">
+                    История поступлений, списаний и перемещений товаров.
+                </p>
+
+                <p class="text-sm font-semibold text-emerald-600 mt-5">
+                    Открыть отчёт →
+                </p>
+
+            </a>
+
+
+            <!-- LOW STOCK REPORT -->
+            <a href="{% url 'low_stock_report' %}"
+               class="group bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:border-amber-300 transition duration-300">
+
+                <div class="flex items-center justify-between">
+
+                    <div class="w-14 h-14 rounded-2xl bg-amber-50 flex items-center justify-center text-3xl group-hover:bg-amber-100 transition">
+                        ⚠️
+                    </div>
+
+                    <span class="text-amber-600 text-xl group-hover:translate-x-1 transition">
+                        →
+                    </span>
+
+                </div>
+
+                <h3 class="font-bold text-slate-800 text-lg mt-5">
+                    Низкие остатки
+                </h3>
+
+                <p class="text-sm text-slate-500 mt-2 leading-6">
+                    Контроль товаров, количество которых достигло минимального уровня.
+                </p>
+
+                <p class="text-sm font-semibold text-amber-600 mt-5">
+                    Открыть отчёт →
+                </p>
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- INFORMATION -->
+    <section class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+
+        <div class="flex items-start gap-4">
+
+            <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-2xl shrink-0">
+                💡
+            </div>
+
+            <div>
+                <h3 class="font-bold text-slate-800">
+                    Информация о системе
+                </h3>
+
+                <p class="text-sm text-slate-500 mt-2 leading-6">
+                    SmartStock помогает контролировать складские запасы,
+                    отслеживать поступления и списания, а также анализировать
+                    движение товаров между складами.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="text-center text-sm text-slate-400 mt-10 pb-4">
+        © 2026 SmartStock. Все права защищены.
+    </footer>
+
+</div>
+
 </body>
-
 </html>
